@@ -73,16 +73,18 @@
   }
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
+*, *:before, *:after {
   margin: 0;
-}
+  padding: 0;
+  box-sizing: border-box;
+  position: relative;
+  }
 
 html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
+  
 }
 
 body {
@@ -105,3 +107,31 @@ a {
     color-scheme: dark;
   }
 }
+
+h1 {
+  display: inline-block;
+  color:pink;
+  font-family: 'Righteous', serif;
+  font-size: 10em; 
+  text-shadow: .03em .03em 0 hsla(230,40%,50%,1);
+  }
+  h1:after {
+    content: attr(data-shadow);
+    position: absolute;
+    top: .06em; left: .06em;
+    z-index: -1;
+    text-shadow: none;
+    background-image:
+      linear-gradient(
+        45deg,
+        transparent 45%,
+        rgb(250, 144, 229) 45%,
+        rgb(250, 144, 229) 65%,
+        transparent 0
+        );
+    background-size: .05em .05em;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  
+    animation: shad-anim 15s linear infinite;
+    }

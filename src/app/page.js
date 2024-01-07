@@ -1,51 +1,47 @@
 "use client"
+
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import styles from './page.module.css';
-const URL = 'https://supermarkets-bingo.onrender.com';
-
 export default function Home(){
-  const [card, setCard] = useState([]);
+  const router = useRouter()
+  const [name, setName] = useState('')
+  const [userType, setUserType] = useState();
+  const [selectSuperHero, setSelectSuperHero]= useState()
 
-  const getCard = () => {
-    fetch(`${URL}/api/getCard`).then((response) => {
-      return response.json();
-    }).then((data) => {
-      setCard(data);
-    })
+  const addUserType = (e) => {
+    if (selectSuperHero && !!name) {
+     if (name === 'admin') {
+        router.push('/admin')  
+     } else {
+       router.push(`/${name}/${selectSuperHero}`)
+      }
+    }
   }
 
-
-  const randomNumber = () => {
-    return Math.floor(Math.random() * 15) + 1;
-  }
-
-  const selectNumber = ({ column, line }) => {
-    const newCard = [...card];
-    newCard[column][line].matched = true;
-    setCard(newCard);
-  }
+const list=[1,2,3,4,5,6,7,8,9]
 
   return (
     <div className={styles.container}>
-      <h1  data-shadow='BINGO'>BINGO</h1>
-      <button className={styles.btn} onClick={getCard}>Get Card</button> 
-      <div className={styles.randomNumber}>{5}</div>
-      <table className={styles.table} >
-        <tbody>{
-        card.map((line, indexColumn) => {
-        return <tr key={indexColumn}>
-          {line.map((element, indexLine) => {
-            return <td key={element.number} className={styles}>
-              <button className={`${styles.buttonNumber} ${element.matched?styles.matched:''}`} onClick={()=>selectNumber({column:indexColumn, line: indexLine})}>
-                {element.number}
-              </button>
-            </td>
-          })}
-        </tr>
-        })
-    }
-      </tbody>
-      </table>
- </div>
+      <h1 data-shadow='BINGO'>BINGO</h1>
+      {!userType &&
+        <div className={styles.formContainer}>
+          <label className={styles.label}>Para entrar al Bingo introduce tu nombre</label>
+          <input className={styles.input} type="text" placeholder="User" onChange={(e) => setName(e.target.value)} />
+          
+          <h2>Seleccione un super-heroe</h2>
+          <div className={styles.avatarContainer}>
+
+            {list.map((item) => (
+              <button key={item} onClick={() => setSelectSuperHero(`superheroe${item}`)} className={`${styles.avatar} ${selectSuperHero===`superheroe${item}`?styles.avatarSelected: ''}`}>
+              <Image  src={`/superheroe${item}.png`} width={50} height={50} alt="Picture of the author" />
+            </button>
+          ))}
+          </div>
+        <button className={styles.btn} onClick={addUserType}>OK</button>
+      </div>
+      }
+    </div>
   );
 }

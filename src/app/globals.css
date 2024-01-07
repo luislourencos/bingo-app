@@ -112,7 +112,7 @@ h1 {
   display: inline-block;
   color:pink;
   font-family: 'Righteous', serif;
-  font-size: 10em; 
+  font-size: 6em; 
   text-shadow: .03em .03em 0 hsla(230,40%,50%,1);
   }
   h1:after {
@@ -135,3 +135,8 @@ h1 {
   
     animation: shad-anim 15s linear infinite;
     }
+
+    @keyframes shad-anim {
+      0% {background-position: 0 0}
+      0% {background-position: 100% -100%}
+      }

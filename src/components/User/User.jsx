@@ -112,14 +112,18 @@ export const User = ({ name, superHeroImage }) => {
     }
   }
     
-    if (isLoading) {
-        return <div>Loading...</div>
+  if (isLoading) {
+    return (
+      <div className={styles.container}>
+        <div>Loading...</div>
+      </div>)
     }
 
   console.log('listRandomNumber',superHeroImage);
   
   const returnMain = () => {
   }
+
     return (
       <div className={styles.container}>
         <div className={styles.header}>

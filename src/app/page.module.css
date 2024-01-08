@@ -4,14 +4,15 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  height: 100vh;
+  justify-content: center;
+  gap: 50px;
+  height: 90vh;
 }
+
 .image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: fill;
   position: absolute;
   z-index: -1;
   opacity: 0.5;
@@ -27,7 +28,6 @@
   width: 100%;
   height: 10vh;
   font-weight: bold;
- 
 } 
 
 
@@ -43,30 +43,29 @@
 }
 
 .btn{
-font-weight: 0;
-font-size: 14px;
-color: #fff;
-background: linear-gradient(90deg, #0066cce2 0%, #c500cca3 100%);
-padding: 10px 31px;
-border: solid #0066cc 2px;
-box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px;
-border-radius: 50px;
-transition : 1078ms;
-transform: translateY(0);
-display: flex;
-flex-direction: row;
-align-items: center;
-cursor: pointer;
+  font-weight: 0;
+  font-size: 14px;
+  color: #fff;
+  background: linear-gradient(90deg, #0066cce2 0%, #c500cca3 100%);
+  padding: 10px 31px;
+  border: solid #0066cc 2px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px;
+  border-radius: 50px;
+  transition : 1078ms;
+  transform: translateY(0);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  cursor: pointer;
 }
 
 .btn:hover{
-
-transition : 1078ms;
-padding: 10px 50px;
-transform : translateY(-0px);
-background: linear-gradient(90deg, #0066cce2 0%, #c500cca3 100%);
-color: #ffffff;
-border: solid 2px #0066cc;
+  transition : 1078ms;
+  padding: 10px 50px;
+  transform : translateY(-0px);
+  background: linear-gradient(90deg, #0066cce2 0%, #c500cca3 100%);
+  color: #ffffff;
+  border: solid 2px #0066cc;
 }
 
 

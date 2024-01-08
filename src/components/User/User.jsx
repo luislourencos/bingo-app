@@ -1,20 +1,21 @@
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import socketIOClient from "socket.io-client";
 import { URL } from '../../utils/constants';
+import { Loading } from '../Loading/Loading';
+import { Ranking } from '../Ranking/Ranking';
+import { UserList } from '../UserList/UserList';
 import styles from './User.module.css';
-import { UserList } from './UserList';
 
 export const User = ({ name, superHeroImage }) => {
-  console.log({ name, superHeroImage})
+   const router = useRouter();
     const [card, setCard] = useState([]);
     const [isLoading, setISLoading] = useState(true);
     const [winnerFirstLine, setWinnerFirstLine] = useState({line: false , name: ''});
     const [winnerBingo, setWinnerBingo] = useState({bingo: false , name: ''});
     const [listRandomNumber, setListRandomNumber] = useState([]);
     const [userList, setUserList] = useState([])
-
-  console.log(userList)
   
   useEffect(() => {
     const socket = socketIOClient(URL);
@@ -115,31 +116,36 @@ export const User = ({ name, superHeroImage }) => {
     
   if (isLoading) {
     return (
-      <div className={styles.container}>
-        <div>Loading...</div>
+      <div className={styles.containerLoading}>
+         <Loading />
       </div>)
     }
 
-  console.log('listRandomNumber',superHeroImage);
-  
   const returnMain = () => {
+    const socket = socketIOClient(URL);
+    socket.emit('removeUser', { name });
+    router.push('/');
   }
 
     return (
       <div className={styles.container}>
+        {/* HEADER */}
         <div className={styles.header}>
-          <button className={styles.buttonReturn} onClick={() => returnMain()}>{'<'}</button>
-          <h2>Bingo</h2>
+          <button className={styles.buttonReturn} onClick={returnMain}>{'<'}</button>
+          <h2 className={styles.colorWhite}>Bingo</h2>
         <div className={styles.userInfo}>
           <Image  src={`/${superHeroImage}.png`} width={50} height={50} className={styles.avatar}alt="Picture of the author" />
           <p>{name}</p>
           </div>
-        
         </div>
+        {/* HEADER */}
+        {/* INFO */}
+          <div className={styles.infoGame}>
+          <UserList userList={userList.filter(user => user.name !== name)} winnerFirstLine={winnerFirstLine} winnerBingo={winnerBingo} />
+            {listRandomNumber.length > 0 && <div className={styles.randomNumber}>{listRandomNumber[listRandomNumber.length - 1]}</div>}
+            <Ranking />
+          </div>
         <div>
-          <div>{`WinLine=>${winnerFirstLine.name}`}</div>
-          <div>{`Bingo first Line=>${winnerFirstLine.line?'true':'false'}`}</div>
-          <div>{`WinBingo=>${winnerBingo.name}`}</div>
           {winnerBingo.bingo && <Image
             src="/200w.gif"
             width={500}
@@ -147,9 +153,7 @@ export const User = ({ name, superHeroImage }) => {
             className={styles.image}
             alt="Picture of the author"
           />}
-          <UserList userList={userList.filter(user=>user.name !==name)} />
             </div>
-            {listRandomNumber.length > 0 && <div className={styles.randomNumber}>{listRandomNumber[listRandomNumber.length - 1]}</div>}
       <table className={styles.table} >
         <tbody>{
         card.map((line, indexColumn) => {
@@ -166,7 +170,6 @@ export const User = ({ name, superHeroImage }) => {
     }
       </tbody>
       </table>
-        </div>
-    )
+    </div>)
 }   
 

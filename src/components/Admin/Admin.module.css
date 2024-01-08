@@ -1,0 +1,106 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 50px;
+    gap: 20px;
+    height: 90vh;
+}
+
+.buttonsContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 20px;
+}
+
+.btn{
+    font-weight: 0;
+    font-size: 14px;
+    color: #fff;
+    background: linear-gradient(90deg, #0066cce2 0%, #c500cca3 100%);
+    padding: 10px 31px;
+    border: solid #0066cc 2px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px;
+    border-radius: 50px;
+    transition : 1078ms;
+    transform: translateY(0);
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+    cursor: pointer;
+    min-width: 160px;
+    transition-duration: 500ms;
+  
+  }
+  
+  .btn:hover{
+    transform: scale(1.1);
+  }
+  
+  .numbers {
+    border:1px solid black;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background-color: white ;
+    color: black;
+    font-weight: bold;
+    font-size: 2rem;
+    padding: 5px;
+  }
+  .lastNumber {
+    background-color: red;
+    color: white;
+  }
+
+  .numberList {
+    width: 90%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .userList {
+    width: 90%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .cardContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+    text-transform: uppercase;
+    border: 2px solid black;
+  }
+
+  .buttonNumber {
+    font-size: 10px;
+    padding: 5px;
+    width: 100%;
+    background-color: white;
+    border: 2px solid black;
+  }
+
+  .matched {
+    background-color: green;
+    color: white;
+  }

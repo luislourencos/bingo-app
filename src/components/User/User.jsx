@@ -4,6 +4,7 @@ import socketIOClient from "socket.io-client";
 import { URL } from '../../utils/constants';
 import styles from './User.module.css';
 import { UserList } from './UserList';
+
 export const User = ({ name, superHeroImage }) => {
   console.log({ name, superHeroImage})
     const [card, setCard] = useState([]);

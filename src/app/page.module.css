@@ -5,7 +5,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 50px;
+  gap: 20px;
   height: 90vh;
 }
 
@@ -54,18 +54,17 @@
   transition : 1078ms;
   transform: translateY(0);
   display: flex;
+  justify-content: center;
   flex-direction: row;
   align-items: center;
   cursor: pointer;
+  min-width: 300px;
+  transition-duration: 500ms;
+
 }
 
 .btn:hover{
-  transition : 1078ms;
-  padding: 10px 50px;
-  transform : translateY(-0px);
-  background: linear-gradient(90deg, #0066cce2 0%, #c500cca3 100%);
-  color: #ffffff;
-  border: solid 2px #0066cc;
+  transform: scale(1.1);
 }
 
 
@@ -73,7 +72,6 @@
   font-size: 20px;
   padding: 20px;
   width: 100%;
-  border: none;
   background-color: white;
   cursor: pointer;
   transition-duration: 300ms;
@@ -108,11 +106,12 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  width: 250px;
+  gap: 50px;
+  width: 100%;
 }
 
 .input {
+  min-width: 300px;
   font-weight: bold;
   padding: 10px;
   border: solid #0066cc 2px;
@@ -132,6 +131,8 @@
 
 .avatarContainer {
   display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
   gap: 10px;
 }
 
@@ -146,6 +147,7 @@
   height: 60px;
   overflow: hidden;
   transition-duration: 300ms;
+  cursor: pointer;
 }
 
 .avatar:hover {
@@ -153,6 +155,6 @@
 }
 
 .avatarSelected {
-  border: 3px solid red;
+  border: 5px solid #0066cc;
   transform: scale(1.1);
 }

@@ -131,15 +131,6 @@ export const User = ({ name, superHeroImage }) => {
     }
   }
 
-  //TEMPORAL
-  const sendBingo = () => {
-    const winBingo = { bingo: true, name, price: bingoPrice,superHeroImage };
-    setWinnerBingo(winBingo);
-    setShowWinnerBingo(true);
-    const socket = socketIOClient(URL);
-    socket.emit('winnerBingo', winBingo)
-  }
-  
   const checkFirstLine = () => {
     if (!winnerFirstLine.line) {
       for (let i = 0; i < card.length; i++) {

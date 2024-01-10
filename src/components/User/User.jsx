@@ -165,7 +165,6 @@ export const User = ({ name, superHeroImage }) => {
       <div className={styles.container}>
         {winnerBingo.bingo && showWinnerBingo && <BingoWin winnerBingo={winnerBingo} />}
         {winnerFirstLine.line && showWinnerLine && <BingoWin winnerBingo={winnerFirstLine} />}
-        <button onClick={sendBingo}>-SendBingo</button>
         {/* HEADER */}
         <div className={styles.header}>
           <button className={styles.buttonReturn} onClick={returnMain}>{'<'}</button>

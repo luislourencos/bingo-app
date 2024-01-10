@@ -1,9 +1,9 @@
 import Image from 'next/image';
 import style from './UserList.module.css';
 
-export const UserList = ({ userList, winnerFirstLine, winnerBingo  }) => {
+export const UserList = ({ userList, winnerFirstLine, winnerBingo, getSuperHeroById  }) => {
 
-    // order userList by completed
+
     userList.sort((a, b) => {
         return b.completed - a.completed;
     });
@@ -12,8 +12,10 @@ export const UserList = ({ userList, winnerFirstLine, winnerBingo  }) => {
         {
             userList?.map((user, index) => {
                 return <div key={index} className={style.element}  style={{color:user.completed>=77?'rgb(6, 236, 6)': user.completed>=50?'rgb(33, 200, 255)': 'black'}} >
-                    <p>{index +1} - </p>
-                    <Image  src={`${user.superHeroImage}`} width={50} height={50} className={style.avatar} alt="Picture of the author" />
+                    <p>{index + 1} - </p>
+                    <div className={style.avatar}>
+                        <Image  src={getSuperHeroById(user.superHeroImage)} width={60} height={70} className={style.avatar} alt="Picture of the author" />
+                    </div>
                     <p>{user.name} - </p>
                     <p>{`${user.completed}%`}</p>  
                     {winnerFirstLine?.name === user.name && <p className={style.line}>- Linea</p>}

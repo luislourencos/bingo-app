@@ -14,12 +14,22 @@ export const useSuperhero = () => {
     )
 
     await responseImages
-    console.log(data)
     setSuperHeroImage(data)
   }
   useEffect(() => {
     getSuperHeroImage()
   }, [])
 
-    return superHeroImage
+  const getSuperHeroById = (id) => {
+    const [superHero] = superHeroImage.filter((superHero) => {
+      return superHero.id == id
+    })
+
+    return superHero?.image || superHeroImage[0]?.image
+  }
+
+  return {
+    superHeroImage,
+    getSuperHeroById
+  }
 }

@@ -10,7 +10,7 @@ export default function Home() {
   const router = useRouter()
   const [name, setName] = useState('')
   const [selectSuperHero, setSelectSuperHero] = useState()
-  const superHeroImage = useSuperhero()
+  const {superHeroImage} = useSuperhero()
 
   const addUserType = (e) => {
     if (selectSuperHero && !!name) {

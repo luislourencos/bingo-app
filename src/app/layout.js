@@ -15,7 +15,7 @@ export default function RootLayout({ children }) {
     <html lang="es">
       <body className={inter.className}>
       <Image
-        src="/casino.jpg"
+        src="https://i.ibb.co/wLG3S8d/casino.jpg"
         width={500}
         height={500}
         className={styles.image}

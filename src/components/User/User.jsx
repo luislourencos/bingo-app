@@ -9,18 +9,29 @@ import { UserList } from '../UserList/UserList';
 import styles from './User.module.css';
 
 export const User = ({ name, superHeroImage }) => {
-   const router = useRouter();
+  const [priceCard, setPriceCard] = useState(0);
+    const [userList, setUserList] = useState([])
+    const linePrice = userList.length*(priceCard/3)
+    const bingoPrice = userList.length*priceCard - linePrice;
+    const router = useRouter();
     const [card, setCard] = useState([]);
     const [isLoading, setISLoading] = useState(true);
-    const [winnerFirstLine, setWinnerFirstLine] = useState({line: false , name: ''});
-    const [winnerBingo, setWinnerBingo] = useState({bingo: false , name: ''});
+    const [winnerFirstLine, setWinnerFirstLine] = useState({line: false , name: '', price: linePrice});
+    const [winnerBingo, setWinnerBingo] = useState({bingo: false , name: '', price: bingoPrice});
     const [listRandomNumber, setListRandomNumber] = useState([]);
-    const [userList, setUserList] = useState([])
   
   useEffect(() => {
     const socket = socketIOClient(URL);
     socket.on("winnerFirstLine", data => {
       setWinnerFirstLine(data);
+    });
+    return () => socket.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const socket = socketIOClient(URL);
+    socket.on("priceCard", data => {
+      setPriceCard(data);
     });
     return () => socket.disconnect();
   }, []);
@@ -90,12 +101,20 @@ export const User = ({ name, superHeroImage }) => {
         return line.every((element) => element.matched);
       });
       if (bingo) {
-        const winBingo = { bingo: true, name };
+        const winBingo = { bingo: true, name, price: bingoPrice };
         setWinnerBingo(winBingo);
         const socket = socketIOClient(URL);
         socket.emit('winnerBingo', winBingo);
       }
     }
+  }
+
+  //TEMPORAL
+  const sendBingo = () => {
+    const winBingo = { bingo: true, name, price: bingoPrice };
+    setWinnerBingo(winBingo);
+    const socket = socketIOClient(URL);
+    socket.emit('winnerBingo', winBingo)
   }
   
   const checkFirstLine = () => {
@@ -104,7 +123,7 @@ export const User = ({ name, superHeroImage }) => {
         const line = card[i];
         const lineMatched = line.every((element) => element.matched);
         if (lineMatched) {
-          const winLine = { line: true, name };
+          const winLine = { line: true, name, price: linePrice };
           const socket = socketIOClient(URL);
           socket.emit('winnerFirstLine', winLine);
           setWinnerFirstLine(winLine);
@@ -129,20 +148,24 @@ export const User = ({ name, superHeroImage }) => {
 
     return (
       <div className={styles.container}>
+        <button onClick={sendBingo}>-SendBingo</button>
         {/* HEADER */}
         <div className={styles.header}>
           <button className={styles.buttonReturn} onClick={returnMain}>{'<'}</button>
-          <h2 className={styles.colorWhite}>Bingo</h2>
+          <h3 className={styles.colorWhite}>{`PREMIOS:  Linea => ${linePrice.toFixed(2)}€  / Bingo => ${bingoPrice.toFixed(2)}€`}</h3>
+          <h3 className={styles.colorWhite}>{`P/cartón: ${priceCard}€`}</h3>
         <div className={styles.userInfo}>
           <Image  src={`/${superHeroImage}.png`} width={50} height={50} className={styles.avatar}alt="Picture of the author" />
           <p>{name}</p>
           </div>
         </div>
         {/* HEADER */}
+        <div className={styles.numberContainer}>
+            {listRandomNumber.length > 0 && <div className={styles.randomNumber}>{listRandomNumber[listRandomNumber.length - 1]}</div>}
+        </div>
         {/* INFO */}
           <div className={styles.infoGame}>
           <UserList userList={userList.filter(user => user.name !== name)} winnerFirstLine={winnerFirstLine} winnerBingo={winnerBingo} />
-            {listRandomNumber.length > 0 && <div className={styles.randomNumber}>{listRandomNumber[listRandomNumber.length - 1]}</div>}
             <Ranking />
           </div>
         <div>

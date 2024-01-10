@@ -4,8 +4,9 @@
   align-items: center;
   justify-content: space-between;
   height: 90vh;
-  padding-bottom: 50px;
+  padding-bottom: 20px;
 }
+
 .containerLoading {
   display: flex;
   flex-direction: column;
@@ -22,13 +23,13 @@
   
 .table {
   border-collapse: collapse;
-  width: 350px;
+  width: 300px;
 }
 
 
 .buttonNumber {
   font-size: 20px;
-  padding: 20px;
+  padding: 15px;
   width: 100%;
   background-color: white;
   cursor: pointer;
@@ -129,4 +130,9 @@
   font-size: 1rem;
   font-weight: bold;
   text-transform: uppercase;
+}
+
+.numberContainer {
+  position: absolute;
+  top: 60px
 }

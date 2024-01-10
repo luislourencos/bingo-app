@@ -1,5 +1,4 @@
-import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import socketIOClient from "socket.io-client";
 import { URL } from '../../utils/constants';
 import style from './Ranking.module.css';
@@ -16,16 +15,24 @@ export const Ranking = () => {
         return () => socket.disconnect();
     }, [])
 
-    return (<div className={style.list}>
-        {
-            ranking?.map((user, index) => {
-                return <div key={index} className={style.element}  style={{color:user.completed>=77?'rgb(6, 236, 6)': user.completed>=50?'rgb(33, 200, 255)': 'black'}} >
-                    <p>{index +1} - </p>
-                    <Image  src={`/${user.superHeroImage}.png`} width={40} height={40} className={style.avatar} alt="Picture of the author" />
-                    <p>{user.name} - </p>
-                    <p>{`${user.money}€`}</p>  
-                </div>
-            })}
-    </div>)
+    const newRanking =  useMemo(()=>ranking.sort((a, b) => {
+        return b.price - a.price;
+    }), [ranking])
+    
+    return (
+        <div>
+            <h3>Ranking</h3>
+            {newRanking && <div className={style.list}>
+                {
+                    newRanking?.map((user, index) => {
+                        return <div key={index} className={style.element}>
+                            <p>{index + 1} - </p>
+                            <p>{user.name || '_ _ _ _'} - </p>
+                            <p>{`${user.price.toFixed(2)}€`}</p>
+                        </div>
+                    })}
+            </div>}
+         </div>)
+            
     
 }

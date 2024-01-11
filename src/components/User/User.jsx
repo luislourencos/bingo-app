@@ -1,4 +1,4 @@
-import { useSuperhero } from '@/hooks/useSuperhero';
+import { useSuperhero } from '@/hooks/SuperheroProvider';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -21,29 +21,30 @@ export const User = ({ name, superHeroImage }) => {
     const [isLoading, setISLoading] = useState(true);
     const [winnerFirstLine, setWinnerFirstLine] = useState({line: false , name: '', price: linePrice});
     const [winnerBingo, setWinnerBingo] = useState({ bingo: false, name: '', price: bingoPrice });
-  const [showWinnerBingo, setShowWinnerBingo] = useState(false);
-  const [showWinnerLine, setShowWinnerLine] = useState(false);
+  const [showWinnerBingo, setShowWinnerBingo] = useState(true);
+  const [showWinnerLine, setShowWinnerLine] = useState(true);
   const [listRandomNumber, setListRandomNumber] = useState([]);
   
   useEffect(() => {
-    if(showWinnerBingo){
+    if(winnerBingo.bingo){
       setTimeout(() => {
         setShowWinnerBingo(false);
       }, 10000);
     }
-  }, [showWinnerBingo]);
+  }, [winnerBingo]);
 
   useEffect(() => {
-    if (showWinnerLine) {
+    if (winnerFirstLine.line) {
       setTimeout(() => {
         setShowWinnerLine(false);
       }, 5000);
     }
-  }, [showWinnerLine]);
+  }, [winnerFirstLine]);
   
   useEffect(() => {
     const socket = socketIOClient(URL);
     socket.on("winnerFirstLine", data => {
+      console.log('ENTER')
       setWinnerFirstLine(data);
     });
     return () => socket.disconnect();

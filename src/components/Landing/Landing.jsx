@@ -1,12 +1,12 @@
 "use client"
 
-import { useSuperhero } from '@/hooks/useSuperhero';
+import { useSuperhero } from '@/hooks/SuperheroProvider';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import styles from './page.module.css';
+import styles from './Landing.module.css';
 
-export default function Home() {
+export default function Landing() {
   const router = useRouter()
   const [name, setName] = useState('')
   const [selectSuperHero, setSelectSuperHero] = useState()
@@ -33,7 +33,7 @@ export default function Home() {
           <div className={styles.avatarContainer}>
             {superHeroImage.length>0 && superHeroImage.map((item) => (
               <button key={item.id} onClick={() => setSelectSuperHero(item.id)} className={`${styles.avatar} ${selectSuperHero===item.id?styles.avatarSelected: ''}`}>
-              <Image  src={item.image} width={70} height={70} alt="Picture of the author" />
+              <Image  src={item.image} width={80} height={80} alt="Picture of the author" />
             </button>
           ))}
           </div>

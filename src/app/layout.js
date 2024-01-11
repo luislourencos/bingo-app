@@ -1,3 +1,4 @@
+
 import { Inter } from 'next/font/google'
 import './globals.css'
 import styles from './page.module.css'
@@ -21,7 +22,9 @@ export default function RootLayout({ children }) {
         className={styles.image}
         alt="Picture of the author"
         />
-        {children}
+        
+          {children}
+        
     <footer className={styles.footer}>
           <div>
 

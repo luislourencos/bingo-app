@@ -83,8 +83,9 @@ export const User = ({ name, superHeroImage }) => {
 
     useEffect(() => {
         const socket = socketIOClient(URL);
-        socket.on("userList", data => {
-          setUserList(data);
+      socket.on("userList", data => {
+        const decodeData = data.map((user) => ({ ...user, name: decodeURI(user.name) }))
+          setUserList(decodeData);
         });
         return () => socket.disconnect();
     }, [])
@@ -201,7 +202,7 @@ export const User = ({ name, superHeroImage }) => {
           <h4 className={styles.infoCard}>{`P/cartón: ${priceCard}€`}</h4>
         <div className={styles.userInfo}>
           <Image  src={getSuperHeroById(superHeroImage)} width={60} height={70} className={styles.avatar}alt="Picture of the author" />
-          <p className={styles.userName}>{name}</p>
+          <p className={styles.userName}>{decodeURI(name)}</p>
           </div>
         </div>
         {/* HEADER */}

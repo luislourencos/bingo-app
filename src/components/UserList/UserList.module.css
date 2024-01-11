@@ -21,12 +21,12 @@
 
 .line {
     color: rgb(253, 9, 9);
-    font-size: 1.5rem;
+    font-size: 1rem;
 }
 
 .bingo {
     color: rgb(6, 236, 6);
-    font-size: 2rem;
+    font-size: 1.5rem;
 }
 
 .avatar {
@@ -62,6 +62,6 @@
     
     .bingo {
         color: rgb(6, 236, 6);
-        font-size: 1.5rem;
+        font-size: 1rem;
     }
   }

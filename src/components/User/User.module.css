@@ -23,13 +23,13 @@
   
 .table {
   border-collapse: collapse;
-  width: 300px;
+  width: 320px;
 }
 
 
 .buttonNumber {
-  font-size: 20px;
-  padding: 15px;
+  font-size: 22px;
+  padding: 22px;
   width: 100%;
   background-color: white;
   cursor: pointer;
@@ -45,11 +45,11 @@
 .randomNumber {
   font-weight: bold;
   font-size: 3rem;
-  color: white;
-  background-color: red;
+  color: #f11712;
+  background-color: #ffe63a;
   border-radius: 50%;
-  width: 80px;
-  height: 80px;
+  width: 90px;
+  height: 90px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -68,7 +68,7 @@
   70% {
     box-shadow: 0 0 0 px2rem(10) rgba(0, 0, 0, 0);
     transform: scale(1.2);
-    border: 8px solid #0066cc;
+    border: 8px solid #0099f7;
   }
 
   100% {
@@ -77,12 +77,15 @@
     border: 1px solid silver;
   }
 }
+ 
+
 
 
 .matched {
-  background-color: pink;
-  color: white;
+  background-color: #ffe63a;
+  color: #f11712;
   font-weight: bold;
+
 }
   
 .header {
@@ -91,7 +94,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background-color: #0066cc;
+  background-color: #0099f7;
 }  
 
 .buttonReturn {
@@ -116,16 +119,13 @@
   color: white;
 }
 
-.colorWhite {
-  color: white;
-}
 
 .infoGame {
   width: 100%;
   padding: 0px 30px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
   font-size: 1rem;
   font-weight: bold;
@@ -151,3 +151,40 @@
   height: 50px;
   border-radius: 50%;
 }
+
+@media (max-width: 700px) {
+  .infoGame {
+    padding: 0px 5px;
+  }
+  .randomNumber {
+    font-size: 2rem;
+    width: 70px;
+    height: 70px;
+  }
+
+  .buttonNumber {
+    font-size: 15px;
+    padding: 12px;
+  }
+
+  .table {
+    width: 250px;
+  }
+
+  .infoCard {
+    padding: 1px;
+    font-size: 10px;
+    text-align: center;
+  }
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  .userName {
+    display: none;
+  }
+  
+}
+

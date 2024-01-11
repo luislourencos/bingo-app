@@ -22,7 +22,7 @@
 .footer {
   position: sticky;
   bottom: 0;
-  background-color: #0066cc;
+  background-color: #0099f7;
   color: white;
   display: flex;
   flex-direction: row;
@@ -46,10 +46,10 @@
 }
 
 .btn{
-  font-weight: 0;
-  font-size: 14px;
-  color: #fff;
-  background: linear-gradient(90deg, #0066cce2 0%, #c500cca3 100%);
+  font-weight: bold;
+  font-size: 1rem;
+  color: #ffe63a;
+  background: linear-gradient(90deg, #0066cce2 0%, #f11712 100%);
   padding: 10px 31px;
   border: solid #0066cc 2px;
   box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px;
@@ -90,7 +90,7 @@
   font-weight: bold;
   font-size: 3rem;
   color: white;
-  background-color: red;
+  background-color: #f11712;
   border-radius: 50%;
   width: 100px;
   height: 100px;
@@ -117,7 +117,7 @@
   min-width: 300px;
   font-weight: bold;
   padding: 10px;
-  border: solid #0066cc 2px;
+  border: solid #0099f7 4px;
   box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px;
 }
 
@@ -128,7 +128,7 @@
 .label {
   font-weight: bold;
   font-size: 1.2rem;
-  color: #0066cc;
+  color: #bb070e;
   text-align: center;
 }
 
@@ -158,6 +158,22 @@
 }
 
 .avatarSelected {
-  border: 5px solid #0066cc;
+  border: 8px solid #0099f7;
   transform: scale(1.1);
+}
+
+@media (max-width: 700px) {
+  .avatar {
+    width: 50px;
+    height: 50px;
+  } 
+
+  .container {
+    gap: 5px;
+    margin-bottom: 0px;
+  }
+
+  .avatarContainer {
+    margin:0 15px
+  }
 }

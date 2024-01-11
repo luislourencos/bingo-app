@@ -9,6 +9,7 @@ export const UserList = ({ userList, winnerFirstLine, winnerBingo, getSuperHeroB
     });
 
     return (<div className={style.list}>
+        <h3 className={style.title}>Jugadores</h3>
         {
             userList?.map((user, index) => {
                 return <div key={index} className={style.element}  style={{color:user.completed>=77?'rgb(6, 236, 6)': user.completed>=50?'rgb(33, 200, 255)': 'black'}} >

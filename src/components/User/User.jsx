@@ -200,14 +200,14 @@ export const User = ({ name, superHeroImage }) => {
           <h4 className={styles.infoCard}>{`P/cartón: ${priceCard}€`}</h4>
         <div className={styles.userInfo}>
           <Image  src={getSuperHeroById(superHeroImage)} width={60} height={70} className={styles.avatar}alt="Picture of the author" />
-          <p>{name}</p>
+          <p className={styles.userName}>{name}</p>
           </div>
         </div>
         {/* HEADER */}
     
         {/* INFO */}
           <div className={styles.infoGame}>
-          <UserList getSuperHeroById={getSuperHeroById} userList={userList.filter(user => user.name !== name)} winnerFirstLine={winnerFirstLine} winnerBingo={winnerBingo} />
+            <UserList getSuperHeroById={getSuperHeroById} userList={userList.filter(user => user.name !== name)} winnerFirstLine={winnerFirstLine} winnerBingo={winnerBingo} />
             <Ranking />
           </div>
         <div>

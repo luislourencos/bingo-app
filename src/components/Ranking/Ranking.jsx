@@ -20,9 +20,9 @@ export const Ranking = () => {
     }), [ranking])
     
     return (
-        <div>
-            <h3>Ranking</h3>
-            {newRanking && <div className={style.list}>
+        <div className={style.list}>
+            <h3 className={style.title}>Ranking</h3>
+            {newRanking && <div>
                 {
                     newRanking?.map((user, index) => {
                         return <div key={index} className={style.element}>

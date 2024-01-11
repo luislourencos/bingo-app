@@ -16,17 +16,17 @@ const gifList = [
    <iframe src="https://giphy.com/embed/U56VoSyFD8MFcie2k8" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/MXPlayerOfficial-good-correct-thatsaboutit-U56VoSyFD8MFcie2k8">via GIPHY</a></p>
     </>,
     <>
-<iframe src="https://giphy.com/embed/U56VoSyFD8MFcie2k8" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/MXPlayerOfficial-good-correct-thatsaboutit-U56VoSyFD8MFcie2k8">via GIPHY</a></p>
-    </>,
-    <>
-<iframe src="https://giphy.com/embed/DFu7j1d1AQbaE" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/stephen-django-djangostephen-DFu7j1d1AQbaE">via GIPHY</a></p>
-    </>,
-    <>
-<iframe src="https://giphy.com/embed/gjZwGGfhw1zd3tBGok" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/hyperrpg-malikabdayhyperdrive-thats-a-bingo-daltonverse-gjZwGGfhw1zd3tBGok">via GIPHY</a></p>
-    </>,
-    <>
-<iframe src="https://giphy.com/embed/gjZwGGfhw1zd3tBGok" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/hyperrpg-malikabdayhyperdrive-thats-a-bingo-daltonverse-gjZwGGfhw1zd3tBGok">via GIPHY</a></p>
-    </>,
+    <iframe src="https://giphy.com/embed/U56VoSyFD8MFcie2k8" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/MXPlayerOfficial-good-correct-thatsaboutit-U56VoSyFD8MFcie2k8">via GIPHY</a></p>
+        </>,
+        <>
+    <iframe src="https://giphy.com/embed/DFu7j1d1AQbaE" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/stephen-django-djangostephen-DFu7j1d1AQbaE">via GIPHY</a></p>
+        </>,
+        <>
+    <iframe src="https://giphy.com/embed/gjZwGGfhw1zd3tBGok" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/hyperrpg-malikabdayhyperdrive-thats-a-bingo-daltonverse-gjZwGGfhw1zd3tBGok">via GIPHY</a></p>
+        </>,
+        <>
+    <iframe src="https://giphy.com/embed/gjZwGGfhw1zd3tBGok" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/hyperrpg-malikabdayhyperdrive-thats-a-bingo-daltonverse-gjZwGGfhw1zd3tBGok">via GIPHY</a></p>
+        </>,
 ]
 
 const gifLineList = [

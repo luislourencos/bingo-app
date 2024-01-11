@@ -40,9 +40,9 @@ export const Admin = () => {
     }, []);
     
     const randomNumber = () => {
-        const random = Math.floor(Math.random() * 60) + 1;
+        const random = Math.floor(Math.random() * 50) + 1;
         const socket = socketIOClient(URL);
-        if (listRandomNumber.length < 60) {
+        if (listRandomNumber.length < 50) {
             if (listRandomNumber.includes(random)) {
                 randomNumber();
             } else {

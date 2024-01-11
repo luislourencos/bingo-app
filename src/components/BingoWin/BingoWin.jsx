@@ -29,15 +29,45 @@ const gifList = [
     </>,
 ]
 
+const gifLineList = [
+    <>
+   <iframe src="https://giphy.com/embed/nqi89GMgyT3va" width="428" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/nqi89GMgyT3va">via GIPHY</a></p>
+        </>,  
+    <>
+  <iframe src="https://giphy.com/embed/o75ajIFH0QnQC3nCeD" width="480" height="400" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/theoffice-o75ajIFH0QnQC3nCeD">via GIPHY</a></p>
+        </>,  
+    <>
+    <iframe src="https://giphy.com/embed/o75ajIFH0QnQC3nCeD" width="480" height="400" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/theoffice-o75ajIFH0QnQC3nCeD">via GIPHY</a></p>
+        </>,  
+    <>
+   <iframe src="https://giphy.com/embed/ddHhhUBn25cuQ" width="480" height="270" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/ftw-coachs-ddHhhUBn25cuQ">via GIPHY</a></p>
+        </>,  
+    <>
+   <iframe src="https://giphy.com/embed/5oGIdt1xapQ76" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/happy-excited-5oGIdt1xapQ76">via GIPHY</a></p>
+        </>,  
+    <>
+   <iframe src="https://giphy.com/embed/uudzUtVcsLAoo" width="480" height="395" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/golf-success-tiger-woods-uudzUtVcsLAoo">via GIPHY</a></p>
+        </>,  
+    <>
+   <iframe src="https://giphy.com/embed/vvbGMpbhZMcHSsD50w" width="480" height="361" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/reaction-vvbGMpbhZMcHSsD50w">via GIPHY</a></p>
+        </>,  
+    <>
+   <iframe src="https://giphy.com/embed/3rUbeDiLFMtAOIBErf" width="480" height="270" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/win-argument-3rUbeDiLFMtAOIBErf">via GIPHY</a></p>
+        </>,  
+]
+
 export const BingoWin = ({
     winnerBingo,
 }) => {
     const { getSuperHeroById } = useSuperhero();
     const [gif, setGif] = useState();
+    const [gifLine, setGifLine] = useState();
 
     useEffect(() => {
         const randomGifList = gifList[Math.floor(Math.random() * gifList.length)];
+        const randomGifLineList = gifLineList[Math.floor(Math.random() * gifLineList.length)];
         setGif(randomGifList); 
+        setGifLine(randomGifLineList);
     }, [])
     
     const image = getSuperHeroById(winnerBingo.superHeroImage)
@@ -51,7 +81,7 @@ export const BingoWin = ({
             <Image  src={image} width={60} height={70} className={style.avatar}alt="Picture of the author" />
             <h1>{winnerBingo?.line?'Linea':'BINGO'}</h1>
         </div>
-        {gif}
+        {winnerBingo?.line?gifLine:gif}
     </div>
     )
 }

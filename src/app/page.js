@@ -24,7 +24,7 @@ export default function Home() {
   
   return (
     <div className={styles.container}>
-      <h1 data-shadow='BINGO'>BINGO </h1>
+      <h1 data-shadow='BINGO'>BINGO</h1>
       <h1 data-shadow='Supermarkets'>Supermarkets</h1>
       
         <div className={styles.formContainer}>

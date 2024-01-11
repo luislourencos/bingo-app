@@ -5,7 +5,7 @@
     justify-content: flex-start;
     margin-top: 50px;
     gap: 20px;
-    height: 90vh;
+    min-height: 90vh;
 }
 
 .buttonsContainer {
@@ -133,3 +133,4 @@
     color: rgb(6, 236, 6);
     font-size: 2rem;
 }
+

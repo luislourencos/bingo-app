@@ -29,7 +29,7 @@ export const User = ({ name, superHeroImage }) => {
     if(showWinnerBingo){
       setTimeout(() => {
         setShowWinnerBingo(false);
-      }, 6000);
+      }, 10000);
     }
   }, [showWinnerBingo]);
 
@@ -37,7 +37,7 @@ export const User = ({ name, superHeroImage }) => {
     if (showWinnerLine) {
       setTimeout(() => {
         setShowWinnerLine(false);
-      }, 3000);
+      }, 5000);
     }
   }, [showWinnerLine]);
   
@@ -46,6 +46,12 @@ export const User = ({ name, superHeroImage }) => {
     socket.on("winnerFirstLine", data => {
       setWinnerFirstLine(data);
     });
+    return () => socket.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const socket = socketIOClient(URL);
+    socket.emit("userEnter")
     return () => socket.disconnect();
   }, []);
 
@@ -77,7 +83,22 @@ export const User = ({ name, superHeroImage }) => {
     useEffect(() => {
         const socket = socketIOClient(URL);
         socket.on("userList", data => {
-            setUserList(data);
+          setUserList(data);
+        });
+        return () => socket.disconnect();
+    }, [])
+  
+    useEffect(() => {
+        const socket = socketIOClient(URL);
+        socket.on("restart", data => {
+          getCard();
+        });
+        return () => socket.disconnect();
+    }, [])
+    useEffect(() => {
+        const socket = socketIOClient(URL);
+        socket.on("resetAll", data => {
+          router.push('/');
         });
         return () => socket.disconnect();
     }, [])
@@ -107,13 +128,19 @@ export const User = ({ name, superHeroImage }) => {
         }
     }, [card]);
   
-    const selectNumber = ({ column, line }) => {
-        const newCard = [...card];
+
+  const selectNumber = ({ column, line }) => {
+
+    const newCard = [...card];
+    const number = newCard[column][line].number;
+    const index = listRandomNumber.indexOf(number);
+    if (index !== -1) {
       newCard[column][line].matched = true;
-        setCard(newCard);
+      setCard(newCard);
       checkFirstLine();
       checkBingo();
     }
+  }
   
   
   const checkBingo = () => {  
@@ -168,17 +195,16 @@ export const User = ({ name, superHeroImage }) => {
         {/* HEADER */}
         <div className={styles.header}>
           <button className={styles.buttonReturn} onClick={returnMain}>{'<'}</button>
-          <h3 className={styles.colorWhite}>{`PREMIOS:  Linea => ${linePrice.toFixed(2)}€  / Bingo => ${bingoPrice.toFixed(2)}€`}</h3>
-          <h3 className={styles.colorWhite}>{`P/cartón: ${priceCard}€`}</h3>
+          <h4 className={styles.infoCard}>{`Linea: ${linePrice.toFixed(2)}€`}</h4>
+          <h4 className={styles.infoCard}>{`Bingo: ${bingoPrice.toFixed(2)}€`}</h4>
+          <h4 className={styles.infoCard}>{`P/cartón: ${priceCard}€`}</h4>
         <div className={styles.userInfo}>
           <Image  src={getSuperHeroById(superHeroImage)} width={60} height={70} className={styles.avatar}alt="Picture of the author" />
           <p>{name}</p>
           </div>
         </div>
         {/* HEADER */}
-        <div className={styles.numberContainer}>
-            {listRandomNumber.length > 0 && <div className={styles.randomNumber}>{listRandomNumber[listRandomNumber.length - 1]}</div>}
-        </div>
+    
         {/* INFO */}
           <div className={styles.infoGame}>
           <UserList getSuperHeroById={getSuperHeroById} userList={userList.filter(user => user.name !== name)} winnerFirstLine={winnerFirstLine} winnerBingo={winnerBingo} />
@@ -187,7 +213,8 @@ export const User = ({ name, superHeroImage }) => {
         <div>
        
         </div>
-
+      <div className={styles.numberContainer}>
+            {listRandomNumber.length > 0 && <div className={styles.randomNumber}>{listRandomNumber[listRandomNumber.length - 1]}</div>}
       <table className={styles.table} >
         <tbody>{
         card.map((line, indexColumn) => {
@@ -203,7 +230,8 @@ export const User = ({ name, superHeroImage }) => {
         })
     }
       </tbody>
-      </table>
+          </table>
+          </div>
     </div>)
 }   
 

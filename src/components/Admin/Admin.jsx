@@ -1,26 +1,28 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import socketIOClient from "socket.io-client";
 import { URL } from '../../utils/constants';
+import { Ranking } from "../Ranking/Ranking";
 import style from './Admin.module.css';
 
 export const Admin = () => { 
     const [listRandomNumber, setListRandomNumber] = useState([]);
     const [userList, setUserList] = useState([])
-    const [cardPrice, setCardPrice] = useState(0);
-    const [ranking, setRanking] = useState([]);
-    console.log('ranking',ranking);
-    useEffect(() => {
-        const rankingStorage = JSON.parse(localStorage.getItem('ranking'));
-        const updatedRanking = rankingStorage || [];
-        setRanking(updatedRanking);
-        const socket = socketIOClient(URL);
-        socket.emit('ranking', updatedRanking);
-        socket.emit('priceCard', cardPrice);
-        return () => socket.disconnect();
-    }, [userList.length]);
+    const [cardPrice, setCardPrice] = useState(0.15);
 
+    useEffect(() => {
+        const socket = socketIOClient(URL);
+        socket.emit('priceCard', cardPrice);
+    }, [cardPrice]);
+
+    useEffect(() => {
+        const socket = socketIOClient(URL);
+        socket.emit("userEnter")
+        return () => socket.disconnect();
+      }, []);
+
+    
     useEffect(() => {
         const socket = socketIOClient(URL);
         socket.on("userList", data => {
@@ -28,35 +30,6 @@ export const Admin = () => {
         });
         return () => socket.disconnect();
     }, [])
-
-    useEffect(() => {
-        const socket = socketIOClient(URL);
-        socket.on("winnerBingo", data => {
-            debugger
-            const rankingStorage = JSON.parse(localStorage.getItem('ranking'));
-            const updatedRanking = rankingStorage || [];
-            const user = updatedRanking.filter((user) => user?.name === data.name);
-           
-            if (user.length > 0) {
-                const newRanking = updatedRanking.map((user) => {
-                    if (user.name === data.name) {
-                        user.price = user.price + data.price;
-                        return user;
-                    }
-                    return user;
-                })
-
-                setRanking(newRanking);
-                localStorage.setItem('ranking', JSON.stringify(newRanking));
-                socket.emit('ranking', newRanking);
-            } else {
-                setRanking([...updatedRanking, data])
-                localStorage.setItem('ranking', JSON.stringify([...updatedRanking, data]));
-                socket.emit('ranking', [...updatedRanking, data]);
-            }  
-        });
-        return () => socket.disconnect();
-    }, []);
     
     useEffect(() => {
         const socket = socketIOClient(URL);
@@ -87,41 +60,18 @@ export const Admin = () => {
         socket.emit('restart');
     }
     const resetAll = () => {
-        setRanking([]);
-        localStorage.setItem('ranking', JSON.stringify([]));
         const socket = socketIOClient(URL);
-        socket.emit('restart');
+        socket.emit('resetAll');
     }
-    
-    const postPrice = () => {
-        const socket = socketIOClient(URL);
-        socket.emit('priceCard', cardPrice);
-    }
-    
-    const newRanking =  useMemo(()=>ranking.sort((a, b) => {
-        return b.price - a.price;
-    }), [ranking])
     
     return (
         <div className={style.container}>
-            {JSON.stringify(ranking)}
             <h3>Precio por cartón</h3>
             <input type="number" value={cardPrice} onChange={(e) => setCardPrice(e.target.value)} />
             <div>
-            <h3>Ranking</h3>
-            <div className={style.list}>
-                {
-                   newRanking.length>0 && newRanking.map((user, index) => {
-                       console.log(user);
-                        return <div key={index} className={style.element} >
-                            <p>{index + 1} - </p>
-                            <p>{user?.name || '_ _ _ _'} - </p>
-                            <p>{`${user?.price?.toFixed(2)}€`}</p>
-                        </div>
-                    })}
+            <Ranking />
+
             </div>
-            </div>
-            <button className={style.btn} onClick={postPrice}>Asignar Precio</button>
             <div className={style.buttonsContainer}>
                 <button className={style.btn} onClick={restart}>Restart</button>
                 <button className={style.btn} onClick={resetAll}>Reset All</button>

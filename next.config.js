@@ -2,7 +2,18 @@
 const nextConfig = {
     reactStrictMode: true,
     images: {
-        domains: ['i.ibb.co','cdn.jsdelivr.net'],
+        remotePatterns: [
+            {
+              protocol: 'https',
+              hostname: 'i.ibb.co',
+              pathname: '**',
+            },
+            {
+              protocol: 'https',
+              hostname: 'cdn.jsdelivr.net',
+              pathname: '**',
+            },
+          ],
     },
 }
 

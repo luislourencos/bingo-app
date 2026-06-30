@@ -13,6 +13,11 @@ const nextConfig = {
               hostname: 'cdn.jsdelivr.net',
               pathname: '**',
             },
+            {
+              protocol: 'https',
+              hostname: 'cataas.com',
+              pathname: '**',
+            },
           ],
     },
 }

@@ -11,13 +11,9 @@ const SuperheroProvider = ({ children }) => {
     const superHeroeId = [149, 332, 346,620,644, 69,717,655, 558,561, 106,275,303]
 
   const getSuperHeroImage = async () => {
-    const data = []
-    const responseImages =  Promise.all(superHeroeId.map((id) => fetch(`https://cdn.jsdelivr.net/gh/akabab/superhero-api/api/id/${id}.json`)
-        .then((response) => response.json())
-        .then((user) => data.push({ image: user.images.sm , id: user.id})))
-    )
-
-    await responseImages
+    const cats = await (await fetch('https://cataas.com/api/cats?limit=20&skip=0')).json()
+    console.log('cats', cats)
+    const data = cats.map((cat)=> ({image: `https://cataas.com/cat/${cat.id}`, id: cat.id}))
     setSuperHeroImage(data)
   }
   useEffect(() => {

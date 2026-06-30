@@ -1,11 +1,13 @@
 "use client"
 
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getSocket } from "../../utils/socket";
 import { Ranking } from "../Ranking/Ranking";
 import style from './Admin.module.css';
 
 export const Admin = () => {
+    const router = useRouter();
     const [listRandomNumber, setListRandomNumber] = useState([]);
     const [userList, setUserList] = useState([]);
     const [cardPrice, setCardPrice] = useState(0.15);
@@ -59,16 +61,23 @@ export const Admin = () => {
 
     return (
         <div className={style.container}>
-            <h3>Precio por cartón</h3>
-            <input type="number" value={cardPrice} onChange={(e) => setCardPrice(Number(e.target.value))} />
-            <div>
-            <Ranking />
 
+            <div className={style.header}>
+                <button className={style.buttonReturn} onClick={() => router.push('/')}>{'<'}</button>
+                <p className={style.headerTitle}>BINGO</p>
+                <span className={style.headerSpacer} />
             </div>
-            <div className={style.buttonsContainer}>
-                <button className={style.btn} onClick={restart}>Restart</button>
-                <button className={style.btn} onClick={resetAll}>Reset All</button>
-                <button className={style.btn} onClick={randomNumber}>Random Number</button>
+
+            <div className={style.topRow}>
+                <div className={style.rankingWrap}>
+                    <Ranking />
+                </div>
+
+                <div className={style.buttonsContainer}>
+                    <button className={style.btn} onClick={restart}>Restart</button>
+                    <button className={style.btn} onClick={resetAll}>Reset All</button>
+                    <button className={style.btn} onClick={randomNumber}>Random</button>
+                </div>
             </div>
               {listRandomNumber.length > 0 && (
             <div className={`${style.numbers} ${style.lastNumber}`}>
@@ -80,12 +89,12 @@ export const Admin = () => {
             return <div className={`${style.numbers} ${style.smallNumber}`} key={number}>{number}</div>
         })}
         </div>
-            <h2>Targetas de los usuarios</h2>
+            <h4>Targetas de los usuarios</h4>
             <div className={style.userList}>
 
             {userList?.map((user, index) => {
                 return <div key={user.name ?? index} className={style.cardContainer}>
-                    <h3>{user.name}</h3>
+                    <h5>{user.name}</h5>
                     <table className={style.table} >
                         <tbody>{
                             user.card?.map((line, indexColumn) => {

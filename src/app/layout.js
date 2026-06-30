@@ -26,11 +26,7 @@ export default function RootLayout({ children }) {
           {children}
         
     <footer className={styles.footer}>
-    
-          <h2 style={{color: 'black'}}>
-          Mango
-          </h2>
-     
+          <span className={styles.brand}>MANGO</span>
     </footer>
       </body>
     </html>

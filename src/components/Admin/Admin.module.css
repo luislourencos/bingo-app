@@ -3,49 +3,90 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    margin-top: 50px;
-    gap: 20px;
-    min-height: 90vh;
+    gap: 15px;
+    height: 92vh;
+    max-height: 92vh;
+    width: 100%;
+    overflow: hidden;
 }
 
-.buttonsContainer {
+.header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 12px;
+    background-color: white;
+}
+
+.buttonReturn {
+    font-size: 1.4rem;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    border: 0px solid black;
+    background-color: transparent;
+    font-weight: bold;
+    color: black;
+    transition-duration: 300ms;
+}
+
+.headerTitle {
+    font-size: 0.85rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: black;
+}
+
+.headerSpacer {
+    width: 36px;
+}
+
+.topRow {
     width: 100%;
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    align-items: stretch;
+    gap: 10px;
+}
+
+.rankingWrap {
+    max-height: 120px;
+    overflow-y: auto;
+    flex: 1 1 0;
+    max-width: 200px;
+}
+
+.buttonsContainer {
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-evenly;
-    gap: 20px;
+    justify-content: center;
+    gap: 5px;
+    max-height: 120px;
 }
 
 .btn{
     font-weight: 0;
-    font-size: 14px;
-    color: #fff;
-    background: linear-gradient(90deg, #0066cce2 0%, #c500cca3 100%);
-    padding: 10px 31px;
-    border: solid #0066cc 2px;
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px;
-    border-radius: 50px;
-    transition : 1078ms;
-    transform: translateY(0);
+    font-size: 12px;
+    color:black;
+    background-color: white;
+    padding: 6px 16px;
+    border: 2px solid black;
+    border-radius: 5px;
     display: flex;
     justify-content: center;
     flex-direction: row;
     align-items: center;
     cursor: pointer;
-    min-width: 160px;
-    transition-duration: 500ms;
-  
-  }
-  
-  .btn:hover{
-    transform: scale(1.1);
+    width: 140px;
   }
   
   .numbers {
     border:1px solid black;
-    width: 60px;
-    height: 60px;
+    width: 45px;
+    height: 45px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -53,7 +94,7 @@
     background-color: white ;
     color: black;
     font-weight: bold;
-    font-size: 2rem;
+    font-size: 1.4rem;
     padding: 5px;
   }
   .lastNumber {
@@ -62,21 +103,24 @@
   }
 
   .smallNumber {
-    width: 36px;
-    height: 36px;
-    font-size: 1.1rem;
-    padding: 3px;
+    border: none;
+    border-radius: 0;
+    width: auto;
+    height: auto;
+    background-color: transparent;
+    font-size: 0.9rem;
+    font-weight: bold;
+    padding: 0;
   }
 
   .numberList {
-    width: 60%;
+    width: 80%;
     display: flex;
     flex-direction: row;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     flex-wrap: wrap;
-    gap: 5px;
-
+    gap: 4px 8px;
   }
 
   .userList {
@@ -87,8 +131,10 @@
     align-items: flex-start;
     flex-wrap: wrap;
     gap: 20px;
-    max-height: 50vh;
+    flex: 1 1 0;
+    min-height: 0;
     overflow-y: auto;
+    padding-bottom: 10px;
   }
 
   .cardContainer {

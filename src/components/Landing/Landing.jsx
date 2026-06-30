@@ -24,7 +24,7 @@ export default function Landing() {
     if (!name) {
       return;
     }
-    if (name === 'admin') {
+    if (name === 'admin6232') {
       router.push('/admin')
     } else {
       router.push(`/${name}/${selectSuperHero}`)
@@ -33,7 +33,15 @@ export default function Landing() {
   
   return (
     <div className={styles.container}>
-      <h1 data-shadow='BINGO'>BINGO</h1>
+      <Image
+        src="https://cataas.com/cat/gif/says/BINGO?position=center&font=Impact&fontSize=60&fontColor=%23fff&fontBackground=none"
+        width={400}
+        height={400}
+        className={styles.bingoImg}
+        unoptimized
+        priority
+        alt="BINGO"
+      />
         <div className={styles.formContainer}>
         <input className={styles.input} type="text" placeholder="User" maxLength={10} value={name} onChange={(e) => setName(e.target.value)} />
           <div className={styles.avatarContainer}>

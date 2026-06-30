@@ -25,8 +25,7 @@ export const Ranking = () => {
                 {newRanking.map((user, index) => {
                     return <div key={user.name ?? index} className={style.element}>
                         <p>{index + 1} - </p>
-                        <p>{decodeURI(user.name) || '_ _ _ _'} - </p>
-                        <p>{`${user.price.toFixed(2)}€`}</p>
+                        <p>{decodeURI(user.name) || '_ _ _ _'} </p>
                     </div>
                 })}
             </div>

@@ -163,8 +163,6 @@ export const User = ({ name, superHeroImage }) => {
             <UserList getSuperHeroById={getSuperHeroById} userList={userList.filter(user => user.name !== name)} winnerFirstLine={winnerFirstLine} winnerBingo={winnerBingo} />
             <Ranking />
           </div>
-        <div>
-        </div>
       <div className={styles.numberContainer}>
             {listRandomNumber.length > 0 && <div className={styles.randomNumber}>{listRandomNumber[listRandomNumber.length - 1]}</div>}
       <table className={styles.table} >

@@ -11,22 +11,26 @@
     background-color: rgba(0, 0, 0, 0.2);
 }
 
+.title {
+    font-size: 0.9rem;
+}
+
 .element {
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
-    gap: 10px;
-    font-size: 1rem;
+    gap: 8px;
+    font-size: 0.75rem;
 }
 
 .line {
     color: rgb(253, 9, 9);
-    font-size: 1.5rem;
+    font-size: 1rem;
 }
 
 .bingo {
     color: rgb(6, 236, 6);
-    font-size: 2rem;
+    font-size: 1.2rem;
 }
 
 @media (max-width: 700px) {
@@ -46,7 +50,7 @@
     }
 
     .element {
-        gap: 5px;
-        font-size: 12px;
+        gap: 4px;
+        font-size: 10px;
     }
 }

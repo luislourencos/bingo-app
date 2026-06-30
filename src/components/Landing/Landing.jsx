@@ -13,23 +13,29 @@ export default function Landing() {
   const {superHeroImage} = useSuperhero()
 
   const addUserType = (e) => {
-    if (selectSuperHero && !!name) {
-     if (name === 'admin') {
-        router.push('/admin')  
-     } else {
-       router.push(`/${name}/${selectSuperHero}`)
-      }
+    if (name.length > 10) {
+      alert('El nombre no puede tener más de 10 caracteres');
+      return;
+    }
+    if (!selectSuperHero) {
+      alert('Debes seleccionar un avatar');
+      return;
+    }
+    if (!name) {
+      return;
+    }
+    if (name === 'admin') {
+      router.push('/admin')
+    } else {
+      router.push(`/${name}/${selectSuperHero}`)
     }
   }
   
   return (
     <div className={styles.container}>
       <h1 data-shadow='BINGO'>BINGO</h1>
-      <h1 data-shadow='Supermarkets'>Supermarkets</h1>
-      
         <div className={styles.formContainer}>
-          <label className={styles.label}>Para entrar al Bingo introduce tu nombre y elige un avatar</label>
-        <input className={styles.input} type="text" placeholder="User" onChange={(e) => setName(e.target.value)} />
+        <input className={styles.input} type="text" placeholder="User" maxLength={10} value={name} onChange={(e) => setName(e.target.value)} />
           <div className={styles.avatarContainer}>
             {superHeroImage.length>0 && superHeroImage.map((item) => (
               <button key={item.id} onClick={() => setSelectSuperHero(item.id)} className={`${styles.avatar} ${selectSuperHero===item.id?styles.avatarSelected: ''}`}>

@@ -95,7 +95,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background-color: #0099f7;
+  background-color: white;
 }  
 
 .buttonReturn {
@@ -106,7 +106,8 @@
   border: 0px solid black;
   background-color: transparent;
   font-weight: bold;
-  color: white
+color: black;
+  transition-duration: 300ms;
 }
 
 .userInfo {
@@ -117,7 +118,8 @@
   font-size: 1rem;
   font-weight: bold;
   text-transform: uppercase;
-  color: white;
+    color: black;
+  transition-duration: 300ms;;
 }
 
 

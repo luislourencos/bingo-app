@@ -4,18 +4,17 @@ import style from './UserList.module.css';
 export const UserList = ({ userList, winnerFirstLine, winnerBingo, getSuperHeroById  }) => {
 
 
-    userList.sort((a, b) => {
-        return b.completed - a.completed;
-    });
+    // Copy before sorting to avoid mutating the array passed via props.
+    const sortedUsers = [...userList].sort((a, b) => b.completed - a.completed);
 
     return (<div className={style.list}>
         <h3 className={style.title}>Jugadores</h3>
         {
-            userList?.map((user, index) => {
+            sortedUsers.map((user, index) => {
                 return <div key={index} className={style.element}  style={{color:user.completed>=77?'rgb(6, 236, 6)': user.completed>=50?'rgb(33, 200, 255)': 'black'}} >
                     <p>{index + 1} - </p>
                     <div className={style.avatar}>
-                        <Image  src={getSuperHeroById(user.superHeroImage)} width={60} height={70} className={style.avatar} alt="Picture of the author" />
+                        <Image  src={getSuperHeroById(user.superHeroImage)} width={32} height={32} className={style.avatar} alt="Picture of the author" />
                     </div>
                     <p>{user.name} - </p>
                     <p>{`${user.completed}%`}</p>  

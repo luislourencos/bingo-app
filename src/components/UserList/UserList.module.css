@@ -11,36 +11,40 @@
     background-color: rgba(0, 0, 0, 0.2);
 }
 
+.title {
+    font-size: 0.9rem;
+}
+
 .element {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 10px;
-    font-size: 1rem;
+    gap: 8px;
+    font-size: 0.75rem;
 }
 
 .line {
     color: rgb(253, 9, 9);
-    font-size: 1rem;
+    font-size: 0.75rem;
 }
 
 .bingo {
     color: rgb(6, 236, 6);
-    font-size: 1.5rem;
+    font-size: 0.9rem;
 }
 
 .avatar {
-    width: 50px;
-    height: 50px;
+    width: 32px;
+    height: 32px;
     overflow: hidden;
     border-radius: 50%;
 }
 
 @media (max-width: 700px) {
     .avatar {
-      width: 30px;
-      height: 30px;
-    } 
+      width: 24px;
+      height: 24px;
+    }
 
     .list {
         border-radius: 10px;
@@ -53,15 +57,15 @@
     }
 
     .element {
-        gap: 5px;
-        font-size: 12px;
+        gap: 4px;
+        font-size: 10px;
     }
     .line {
-        font-size: 1rem;
+        font-size: 10px;
     }
-    
+
     .bingo {
         color: rgb(6, 236, 6);
-        font-size: 1rem;
+        font-size: 12px;
     }
   }

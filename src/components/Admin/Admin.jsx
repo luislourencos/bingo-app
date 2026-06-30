@@ -1,73 +1,66 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import socketIOClient from "socket.io-client";
-import { URL } from '../../utils/constants';
+import { getSocket } from "../../utils/socket";
 import { Ranking } from "../Ranking/Ranking";
 import style from './Admin.module.css';
 
-export const Admin = () => { 
+export const Admin = () => {
     const [listRandomNumber, setListRandomNumber] = useState([]);
-    const [userList, setUserList] = useState([])
+    const [userList, setUserList] = useState([]);
     const [cardPrice, setCardPrice] = useState(0.15);
 
+    // Register all listeners once on a single shared connection.
     useEffect(() => {
-        const socket = socketIOClient(URL);
-        socket.emit('priceCard', cardPrice);
+        const socket = getSocket();
+        socket.emit("userEnter");
+
+        const handleUserList = (data) => setUserList(data);
+        const handleWinnerFirstLine = (data) =>
+            localStorage.setItem('ranking', JSON.stringify(data));
+
+        socket.on("userList", handleUserList);
+        socket.on("winnerFirstLine", handleWinnerFirstLine);
+
+        return () => {
+            socket.off("userList", handleUserList);
+            socket.off("winnerFirstLine", handleWinnerFirstLine);
+        };
+    }, []);
+
+    // Notify the price whenever it changes.
+    useEffect(() => {
+        getSocket().emit('priceCard', cardPrice);
     }, [cardPrice]);
 
-    useEffect(() => {
-        const socket = socketIOClient(URL);
-        socket.emit("userEnter")
-        return () => socket.disconnect();
-      }, []);
-
-    
-    useEffect(() => {
-        const socket = socketIOClient(URL);
-        socket.on("userList", data => {
-            setUserList(data);
-        });
-        return () => socket.disconnect();
-    }, [])
-    
-    useEffect(() => {
-        const socket = socketIOClient(URL);
-        socket.on("winnerFirstLine", data => {
-          localStorage.setItem('ranking', JSON.stringify(data));
-        });
-        return () => socket.disconnect();
-    }, []);
-    
     const randomNumber = () => {
-        const random = Math.floor(Math.random() * 50) + 1;
-        const socket = socketIOClient(URL);
-        if (listRandomNumber.length < 50) {
-            if (listRandomNumber.includes(random)) {
-                randomNumber();
-            } else {
-                setListRandomNumber([...listRandomNumber, random]);
-                socket.emit('randomNumbers', { numbers: [...listRandomNumber, random], user: 'admin' });
-            }
-        } else {
+        if (listRandomNumber.length >= 50) {
             alert('All numbers are out');
+            return;
         }
-    }    
+        let random;
+        do {
+            random = Math.floor(Math.random() * 50) + 1;
+        } while (listRandomNumber.includes(random));
+
+        const numbers = [...listRandomNumber, random];
+        setListRandomNumber(numbers);
+        getSocket().emit('randomNumbers', { numbers, user: 'admin' });
+    };
 
     const restart = () => {
         setListRandomNumber([]);
-        const socket = socketIOClient(URL);
-        socket.emit('restart');
-    }
+        getSocket().emit('restart');
+    };
+
     const resetAll = () => {
-        const socket = socketIOClient(URL);
-        socket.emit('resetAll');
-    }
-    
+        getSocket().emit('resetAll');
+    };
+
     return (
         <div className={style.container}>
             <h3>Precio por cartón</h3>
-            <input type="number" value={cardPrice} onChange={(e) => setCardPrice(e.target.value)} />
+            <input type="number" value={cardPrice} onChange={(e) => setCardPrice(Number(e.target.value))} />
             <div>
             <Ranking />
 
@@ -77,11 +70,21 @@ export const Admin = () => {
                 <button className={style.btn} onClick={resetAll}>Reset All</button>
                 <button className={style.btn} onClick={randomNumber}>Random Number</button>
             </div>
+              {listRandomNumber.length > 0 && (
+            <div className={`${style.numbers} ${style.lastNumber}`}>
+                {listRandomNumber[listRandomNumber.length - 1]}
+            </div>
+        )}
+        <div className={style.numberList}>
+        {listRandomNumber.map((number) => {
+            return <div className={`${style.numbers} ${style.smallNumber}`} key={number}>{number}</div>
+        })}
+        </div>
             <h2>Targetas de los usuarios</h2>
             <div className={style.userList}>
-                
+
             {userList?.map((user, index) => {
-                return <div key={index} className={style.cardContainer}>
+                return <div key={user.name ?? index} className={style.cardContainer}>
                     <h3>{user.name}</h3>
                     <table className={style.table} >
                         <tbody>{
@@ -103,12 +106,7 @@ export const Admin = () => {
         }
 </div>
 
-        <div className={style.numberList}>
-        {listRandomNumber.map((number, index) => {
-            return <div className={`${style.numbers} ${listRandomNumber.length-1===index? style.lastNumber:''}`} key={index}>{number}</div>
-        })}
-        </div>
+
     </div>
     )
-}   
-
+}

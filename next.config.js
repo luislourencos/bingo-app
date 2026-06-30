@@ -18,6 +18,11 @@ const nextConfig = {
               hostname: 'cataas.com',
               pathname: '**',
             },
+            {
+              protocol: 'https',
+              hostname: 'img.magnific.com',
+              pathname: '**',
+            },
           ],
     },
 }

@@ -1,5 +1,5 @@
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 
 const SuperheroContext = createContext(null);
@@ -7,12 +7,8 @@ const SuperheroContext = createContext(null);
 const SuperheroProvider = ({ children }) => {
     const [superHeroImage, setSuperHeroImage] = useState([])
 
-  
-    const superHeroeId = [149, 332, 346,620,644, 69,717,655, 558,561, 106,275,303]
-
   const getSuperHeroImage = async () => {
     const cats = await (await fetch('https://cataas.com/api/cats?limit=20&skip=0')).json()
-    console.log('cats', cats)
     const data = cats.map((cat)=> ({image: `https://cataas.com/cat/${cat.id}`, id: cat.id}))
     setSuperHeroImage(data)
   }
@@ -20,18 +16,25 @@ const SuperheroProvider = ({ children }) => {
     getSuperHeroImage()
   }, [])
 
-  const getSuperHeroById = (id) => {
-    const [superHero] = superHeroImage.filter((superHero) => {
-      return superHero.id == id
-    })
+  // Index by id once so lookups are O(1) instead of scanning the array each call.
+  const imageById = useMemo(() => {
+    const map = new Map();
+    superHeroImage.forEach((hero) => map.set(String(hero.id), hero.image));
+    return map;
+  }, [superHeroImage]);
 
-    return superHero?.image || superHeroImage[0]?.image
-  }
+  const getSuperHeroById = useCallback(
+    (id) => imageById.get(String(id)) || superHeroImage[0]?.image,
+    [imageById, superHeroImage]
+  );
+
+  const value = useMemo(
+    () => ({ getSuperHeroById, superHeroImage }),
+    [getSuperHeroById, superHeroImage]
+  );
 
   return (
-    <SuperheroContext.Provider
-      value={{ getSuperHeroById, superHeroImage }}
-    >
+    <SuperheroContext.Provider value={value}>
       {children}
     </SuperheroContext.Provider>
   );

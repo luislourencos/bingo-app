@@ -3,6 +3,7 @@
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getSocket } from "../../utils/socket";
+import { clearRoomState, loadState, roomKey, saveState } from "../../utils/sessionState";
 import { Ranking } from "../Ranking/Ranking";
 import style from './Admin.module.css';
 
@@ -13,6 +14,21 @@ export const Admin = () => {
     const [listRandomNumber, setListRandomNumber] = useState([]);
     const [userList, setUserList] = useState([]);
     const [cardPrice, setCardPrice] = useState(0.15);
+
+    // Restore persisted state on (re)load so a refresh doesn't lose the game.
+    useEffect(() => {
+        if (!roomId) return;
+        const savedNumbers = loadState(roomKey(roomId, 'admin', 'numbers'), []);
+        if (savedNumbers.length) setListRandomNumber(savedNumbers);
+        const savedPrice = loadState(roomKey(roomId, 'admin', 'price'), null);
+        if (savedPrice != null) setCardPrice(savedPrice);
+    }, [roomId]);
+
+    // Persist drawn numbers whenever they change.
+    useEffect(() => {
+        if (!roomId) return;
+        saveState(roomKey(roomId, 'admin', 'numbers'), listRandomNumber);
+    }, [listRandomNumber, roomId]);
 
     // Register all listeners once on a single shared connection.
     useEffect(() => {
@@ -43,6 +59,7 @@ export const Admin = () => {
     useEffect(() => {
         if (!roomId) return;
         getSocket().emit('priceCard', cardPrice);
+        saveState(roomKey(roomId, 'admin', 'price'), cardPrice);
     }, [cardPrice, roomId]);
 
     const randomNumber = () => {
@@ -62,10 +79,17 @@ export const Admin = () => {
 
     const restart = () => {
         setListRandomNumber([]);
+        if (roomId) {
+            // Restart clears the game (numbers + user cards) but keeps the price config.
+            clearRoomState(roomId);
+            saveState(roomKey(roomId, 'admin', 'price'), cardPrice);
+        }
         getSocket().emit('restart');
     };
 
     const resetAll = () => {
+        if (roomId) clearRoomState(roomId);
+        if (typeof window !== 'undefined') localStorage.removeItem('ranking');
         getSocket().emit('resetAll');
     };
 

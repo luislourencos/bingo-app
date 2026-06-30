@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { URL } from '../../utils/constants';
+import { clearRoomState, clearState, loadState, roomKey, saveState } from '../../utils/sessionState';
 import { getSocket } from '../../utils/socket';
 import { BingoWin } from '../BingoWin/BingoWin';
 import { Loading } from '../Loading/Loading';
@@ -58,8 +59,20 @@ export const User = ({ roomId, name, superHeroImage }) => {
         const onRandomNumbers = (data) => setListRandomNumber(data.numbers);
         const onUserList = (data) =>
             setUserList(data.map((user) => ({ ...user, name: decodeURI(user.name) })));
-        const onRestart = () => getCard();
-        const onResetAll = () => router.push('/');
+        const onRestart = () => {
+            if (room && name) {
+                clearState(roomKey(room, 'user', name, 'card'));
+                clearState(roomKey(room, 'user', name, 'winnerBingo'));
+                clearState(roomKey(room, 'user', name, 'winnerFirstLine'));
+            }
+            setWinnerBingo({ bingo: false, name: '', price: 0 });
+            setWinnerFirstLine({ line: false, name: '', price: 0 });
+            getCard();
+        };
+        const onResetAll = () => {
+            if (room) clearRoomState(room);
+            router.push('/');
+        };
         const onJoinError = (message) => {
             alert(message);
             router.push('/');
@@ -92,9 +105,43 @@ export const User = ({ roomId, name, superHeroImage }) => {
         getSocket().emit("user", { name, card, superHeroImage });
     }, [card]);
 
+    // On (re)load: restore the saved card so a refresh keeps the marked numbers,
+    // otherwise fetch a fresh one. Also restore any winner status.
     useEffect(() => {
-        getCard();
-    }, []);
+        if (!room || !name) {
+            getCard();
+            return;
+        }
+        const savedCard = loadState(roomKey(room, 'user', name, 'card'), null);
+        if (savedCard && savedCard.length) {
+            setCard(savedCard);
+        } else {
+            getCard();
+        }
+        const savedBingo = loadState(roomKey(room, 'user', name, 'winnerBingo'), null);
+        if (savedBingo) setWinnerBingo(savedBingo);
+        const savedLine = loadState(roomKey(room, 'user', name, 'winnerFirstLine'), null);
+        if (savedLine) setWinnerFirstLine(savedLine);
+    }, [room, name]);
+
+    // Persist the card (and winner status) so they survive a page refresh.
+    useEffect(() => {
+        if (room && name && card.length > 0) {
+            saveState(roomKey(room, 'user', name, 'card'), card);
+        }
+    }, [card, room, name]);
+
+    useEffect(() => {
+        if (room && name && winnerBingo.bingo) {
+            saveState(roomKey(room, 'user', name, 'winnerBingo'), winnerBingo);
+        }
+    }, [winnerBingo, room, name]);
+
+    useEffect(() => {
+        if (room && name && winnerFirstLine.line) {
+            saveState(roomKey(room, 'user', name, 'winnerFirstLine'), winnerFirstLine);
+        }
+    }, [winnerFirstLine, room, name]);
 
     useEffect(() => {
         if (card.length > 0) {

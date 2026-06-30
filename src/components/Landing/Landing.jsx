@@ -43,7 +43,7 @@ export default function Landing() {
         alt="BINGO"
       />
         <div className={styles.formContainer}>
-        <input className={styles.input} type="text" placeholder="User" maxLength={10} value={name} onChange={(e) => setName(e.target.value)} />
+        <input className={styles.input} type="text" placeholder="Introduce tu nombre y elige un gato" maxLength={10} value={name} onChange={(e) => setName(e.target.value)} />
           <div className={styles.avatarContainer}>
             {superHeroImage.length>0 && superHeroImage.map((item) => (
               <button key={item.id} onClick={() => setSelectSuperHero(item.id)} className={`${styles.avatar} ${selectSuperHero===item.id?styles.avatarSelected: ''}`}>
@@ -51,7 +51,7 @@ export default function Landing() {
             </button>
           ))}
           </div>
-        <button className={styles.btn} onClick={addUserType}>OK</button>
+        <button className={styles.btn} onClick={addUserType}>Entrar a jugar</button>
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ import styles from './page.module.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'Bingo supermarkets'
+  title: 'Bingo Cats'
 }
 
 import Image from 'next/image'

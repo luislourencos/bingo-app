@@ -8,7 +8,7 @@ const SuperheroProvider = ({ children }) => {
     const [superHeroImage, setSuperHeroImage] = useState([])
 
   const getSuperHeroImage = async () => {
-    const cats = await (await fetch('https://cataas.com/api/cats?limit=20&skip=0')).json()
+    const cats = await (await fetch('https://cataas.com/api/cats?limit=10&skip=0')).json()
     const data = cats.map((cat)=> ({image: `https://cataas.com/cat/${cat.id}`, id: cat.id}))
     setSuperHeroImage(data)
   }

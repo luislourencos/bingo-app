@@ -42,6 +42,22 @@
     width: 36px;
 }
 
+.shareButton {
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: white;
+    background-color: #25d366;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition-duration: 300ms;
+}
+
+.shareButton:hover {
+    transform: scale(1.05);
+}
+
 .topRow {
     width: 100%;
     display: flex;
@@ -97,6 +113,7 @@
     font-size: 1.4rem;
     padding: 5px;
   }
+
   .lastNumber {
     background-color: red;
     color: white;
@@ -158,7 +175,6 @@
 
   .matched {
     background-color: green;
-    color: white;
   }
 
   .list {

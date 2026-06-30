@@ -10,7 +10,8 @@ import { Ranking } from '../Ranking/Ranking';
 import { UserList } from '../UserList/UserList';
 import styles from './User.module.css';
 
-export const User = ({ name, superHeroImage }) => {
+export const User = ({ roomId, name, superHeroImage }) => {
+    const room = roomId ? decodeURIComponent(roomId) : '';
     const { getSuperHeroById } = useSuperhero();
     const [priceCard, setPriceCard] = useState(0);
     const [userList, setUserList] = useState([])
@@ -47,8 +48,9 @@ export const User = ({ name, superHeroImage }) => {
 
     // Single shared connection + all listeners registered once.
     useEffect(() => {
+        if (!room) return;
         const socket = getSocket();
-        socket.emit("userEnter");
+        socket.emit("joinRoom", room);
 
         const onWinnerFirstLine = (data) => setWinnerFirstLine(data);
         const onPriceCard = (data) => setPriceCard(data);
@@ -58,7 +60,13 @@ export const User = ({ name, superHeroImage }) => {
             setUserList(data.map((user) => ({ ...user, name: decodeURI(user.name) })));
         const onRestart = () => getCard();
         const onResetAll = () => router.push('/');
+        const onJoinError = (message) => {
+            alert(message);
+            router.push('/');
+        };
 
+        socket.on("joinError", onJoinError);
+        socket.on("roomFull", onJoinError);
         socket.on("winnerFirstLine", onWinnerFirstLine);
         socket.on("priceCard", onPriceCard);
         socket.on("winnerBingo", onWinnerBingo);
@@ -75,8 +83,10 @@ export const User = ({ name, superHeroImage }) => {
             socket.off("userList", onUserList);
             socket.off("restart", onRestart);
             socket.off("resetAll", onResetAll);
+            socket.off("joinError", onJoinError);
+            socket.off("roomFull", onJoinError);
         };
-    }, []);
+    }, [room]);
 
     useEffect(() => {
         getSocket().emit("user", { name, card, superHeroImage });

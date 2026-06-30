@@ -1,6 +1,6 @@
 "use client"
 
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getSocket } from "../../utils/socket";
 import { Ranking } from "../Ranking/Ranking";
@@ -8,32 +8,42 @@ import style from './Admin.module.css';
 
 export const Admin = () => {
     const router = useRouter();
+    const { id } = useParams();
+    const roomId = id ? decodeURIComponent(id) : '';
     const [listRandomNumber, setListRandomNumber] = useState([]);
     const [userList, setUserList] = useState([]);
     const [cardPrice, setCardPrice] = useState(0.15);
 
     // Register all listeners once on a single shared connection.
     useEffect(() => {
+        if (!roomId) return;
         const socket = getSocket();
-        socket.emit("userEnter");
+        socket.emit("joinRoom", roomId);
 
         const handleUserList = (data) => setUserList(data);
         const handleWinnerFirstLine = (data) =>
             localStorage.setItem('ranking', JSON.stringify(data));
+        const handleJoinError = (message) => {
+            alert(message);
+            router.push('/');
+        };
 
         socket.on("userList", handleUserList);
         socket.on("winnerFirstLine", handleWinnerFirstLine);
+        socket.on("joinError", handleJoinError);
 
         return () => {
             socket.off("userList", handleUserList);
             socket.off("winnerFirstLine", handleWinnerFirstLine);
+            socket.off("joinError", handleJoinError);
         };
-    }, []);
+    }, [roomId]);
 
     // Notify the price whenever it changes.
     useEffect(() => {
+        if (!roomId) return;
         getSocket().emit('priceCard', cardPrice);
-    }, [cardPrice]);
+    }, [cardPrice, roomId]);
 
     const randomNumber = () => {
         if (listRandomNumber.length >= 50) {
@@ -59,13 +69,19 @@ export const Admin = () => {
         getSocket().emit('resetAll');
     };
 
+    const shareWhatsApp = () => {
+        const url = `${window.location.origin}/${roomId}`;
+        const text = `¡Únete a mi sala de bingo! ${url}`;
+        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+    };
+
     return (
         <div className={style.container}>
 
             <div className={style.header}>
                 <button className={style.buttonReturn} onClick={() => router.push('/')}>{'<'}</button>
-                <p className={style.headerTitle}>BINGO</p>
-                <span className={style.headerSpacer} />
+                <p className={style.headerTitle}>BINGO · {roomId}</p>
+                <button className={style.shareButton} onClick={shareWhatsApp} title="Compartir por WhatsApp">Compartir</button>
             </div>
 
             <div className={style.topRow}>

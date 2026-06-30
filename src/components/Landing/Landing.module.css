@@ -80,6 +80,11 @@
 }
 
 
+.btnCreate {
+  background: black;
+  color: #ffffff;
+}
+
 .buttonNumber {
   font-size: 20px;
   padding: 20px;
@@ -125,9 +130,13 @@
 .input {
   min-width: 300px;
   font-weight: bold;
-  padding: 10px;
-  border: 1px solid black;
+  font-size: 1rem;
+  background: #ffffff;
+  color: #000000;
+  padding: 10px 31px;
+  border: solid black 1px;
   border-radius: 5px;
+  text-align: center;
 }
 
 .input:focus {

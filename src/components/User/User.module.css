@@ -6,6 +6,11 @@
   gap: 10px;
   min-height: 90vh;
   padding-bottom: 20px;
+  transition: transform 1000ms ease;
+}
+
+.flipped {
+  transform: rotate(180deg);
 }
 
 .containerLoading {
@@ -17,11 +22,6 @@
   padding-bottom: 20px;
 }
 
-.td {
-    border: 2px solid black;
-    text-align: center;
-  }
-  
 .table {
   border-collapse: collapse;
   width: 320px;
@@ -95,12 +95,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 6px 12px;
+  padding: 6px;
   background-color: white;
 }
 
 .buttonReturn {
-  font-size: 1.4rem;
+  font-size: 1rem;
   width: 36px;
   height: 36px;
   cursor: pointer;
@@ -115,12 +115,10 @@ color: black;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 8px;
-  font-size: 0.85rem;
-  font-weight: bold;
+  font-size: 0.8rem;
   text-transform: uppercase;
-    color: black;
-  transition-duration: 300ms;;
+  color: black;
+  gap: 5px
 }
 
 
@@ -148,18 +146,137 @@ color: black;
   align-items: center;
   gap: 10px;
   margin-top: auto;
+  position: relative;
 }
 
-.infoCard {
-  color: white;
-  padding: 5px;
-  border: 1px solid white;
+/* Centered, round cat gif shown for 5s, layered on top of the randomNumber. */
+.hideCat {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 50%;
+  z-index: 2;
+  pointer-events: none;
 }
 
 .avatar {
-  width: 36px;
-  height: 36px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
+}
+
+.buttonCat {
+  font-size: 0.8rem;
+  display: flex;
+  /* width: 36px; */
+  /* height: 36px; */
+  cursor: pointer;
+  border: 0px solid black;
+  background-color: transparent;
+  transition-duration: 300ms;
+}
+
+.buttonCat:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+/* Slides across the whole screen: enters from the top and goes down until
+   it disappears below the viewport. */
+.slidingCat {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  pointer-events: none;
+  animation: slideCat 6s linear forwards;
+}
+
+@keyframes slideCat {
+  from {
+    top: -200px;
+  }
+  to {
+    top: 100vh;
+  }
+}
+
+/* Cat "send to" dialog */
+.catDialogOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.catDialog {
+  background-color: white;
+  color: black;
+  border-radius: 12px;
+  padding: 20px;
+  width: 90%;
+  max-width: 340px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.catDialogTitle {
+  margin: 0;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.catUserList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+}
+
+.catEmpty {
+  text-align: center;
+  color: #888;
+}
+
+.catUserButton {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border: 2px solid black;
+  border-radius: 8px;
+  background-color: white;
+  color: black;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition-duration: 200ms;
+}
+
+.catUserButton:hover {
+  background-color: #ffe63a;
+  transform: scale(0.98);
+}
+
+.catDialogClose {
+  align-self: center;
+  padding: 8px 20px;
+  border: 0;
+  border-radius: 8px;
+  background-color: #f11712;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 @media (max-width: 700px) {
@@ -168,8 +285,8 @@ color: black;
   }
   .randomNumber {
     font-size: 2rem;
-    width: 70px;
-    height: 70px;
+    width: 90px;
+    height: 90px;
   }
 
   .buttonNumber {
@@ -188,13 +305,37 @@ color: black;
   }
 
   .avatar {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
   }
-
-  .userName {
-    display: none;
-  }
-  
 }
 
+.numberList {
+  display: flex;
+  color: white;
+}
+
+.numbers {
+  border:1px solid black;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: black ;
+  color: white;
+  font-weight: bold;
+  font-size: 0.5rem;
+  padding: 2px;
+}
+
+.numberList {
+  width: 80%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+}

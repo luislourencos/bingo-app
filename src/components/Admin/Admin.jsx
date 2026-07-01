@@ -1,111 +1,54 @@
 "use client"
 
-import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { getSocket } from "../../utils/socket";
-import { clearRoomState, loadState, roomKey, saveState } from "../../utils/sessionState";
+import { useMemo } from "react";
+import { useAdminGame } from "@/hooks/useAdminGame";
 import { Ranking } from "../Ranking/Ranking";
+import { UserCard } from "./UserCard";
 import style from './Admin.module.css';
 
 export const Admin = () => {
-    const router = useRouter();
-    const { id } = useParams();
-    const roomId = id ? decodeURIComponent(id) : '';
-    const [listRandomNumber, setListRandomNumber] = useState([]);
-    const [userList, setUserList] = useState([]);
-    const [cardPrice, setCardPrice] = useState(0.15);
+    const {
+        roomId,
+        listRandomNumber,
+        userList,
+        lastNumber,
+        drawRandomNumber,
+        restart,
+        resetAll,
+        shareWhatsApp,
+        goHome,
+    } = useAdminGame();
 
-    // Restore persisted state on (re)load so a refresh doesn't lose the game.
-    useEffect(() => {
-        if (!roomId) return;
-        const savedNumbers = loadState(roomKey(roomId, 'admin', 'numbers'), []);
-        if (savedNumbers.length) setListRandomNumber(savedNumbers);
-        const savedPrice = loadState(roomKey(roomId, 'admin', 'price'), null);
-        if (savedPrice != null) setCardPrice(savedPrice);
-    }, [roomId]);
+    // The drawn-numbers list only changes when a number is drawn, so keep it
+    // out of re-renders triggered by userList updates.
+    const drawnNumbers = useMemo(
+        () => listRandomNumber.map((number) => (
+            <div className={style.numbers} key={number}>{number}</div>
+        )),
+        [listRandomNumber]
+    );
 
-    // Persist drawn numbers whenever they change.
-    useEffect(() => {
-        if (!roomId) return;
-        saveState(roomKey(roomId, 'admin', 'numbers'), listRandomNumber);
-    }, [listRandomNumber, roomId]);
-
-    // Register all listeners once on a single shared connection.
-    useEffect(() => {
-        if (!roomId) return;
-        const socket = getSocket();
-        socket.emit("joinRoom", roomId);
-
-        const handleUserList = (data) => setUserList(data);
-        const handleWinnerFirstLine = (data) =>
-            localStorage.setItem('ranking', JSON.stringify(data));
-        const handleJoinError = (message) => {
-            alert(message);
-            router.push('/');
-        };
-
-        socket.on("userList", handleUserList);
-        socket.on("winnerFirstLine", handleWinnerFirstLine);
-        socket.on("joinError", handleJoinError);
-
-        return () => {
-            socket.off("userList", handleUserList);
-            socket.off("winnerFirstLine", handleWinnerFirstLine);
-            socket.off("joinError", handleJoinError);
-        };
-    }, [roomId]);
-
-    // Notify the price whenever it changes.
-    useEffect(() => {
-        if (!roomId) return;
-        getSocket().emit('priceCard', cardPrice);
-        saveState(roomKey(roomId, 'admin', 'price'), cardPrice);
-    }, [cardPrice, roomId]);
-
-    const randomNumber = () => {
-        if (listRandomNumber.length >= 50) {
-            alert('All numbers are out');
-            return;
-        }
-        let random;
-        do {
-            random = Math.floor(Math.random() * 50) + 1;
-        } while (listRandomNumber.includes(random));
-
-        const numbers = [...listRandomNumber, random];
-        setListRandomNumber(numbers);
-        getSocket().emit('randomNumbers', { numbers, user: 'admin' });
-    };
-
-    const restart = () => {
-        setListRandomNumber([]);
-        if (roomId) {
-            // Restart clears the game (numbers + user cards) but keeps the price config.
-            clearRoomState(roomId);
-            saveState(roomKey(roomId, 'admin', 'price'), cardPrice);
-        }
-        getSocket().emit('restart');
-    };
-
-    const resetAll = () => {
-        if (roomId) clearRoomState(roomId);
-        if (typeof window !== 'undefined') localStorage.removeItem('ranking');
-        getSocket().emit('resetAll');
-    };
-
-    const shareWhatsApp = () => {
-        const url = `${window.location.origin}/${roomId}`;
-        const text = `¡Únete a mi sala de bingo! ${url}`;
-        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
-    };
+    // Player cards only change when userList does, so drawing a number won't
+    // rebuild this list.
+    const userCards = useMemo(
+        () => userList?.map((user, index) => (
+            <UserCard key={user.name ?? index} user={user} />
+        )),
+        [userList]
+    );
 
     return (
         <div className={style.container}>
 
             <div className={style.header}>
-                <button className={style.buttonReturn} onClick={() => router.push('/')}>{'<'}</button>
+                <button className={style.buttonReturn} onClick={goHome}>{'<'}</button>
                 <p className={style.headerTitle}>BINGO · {roomId}</p>
-                <button className={style.shareButton} onClick={shareWhatsApp} title="Compartir por WhatsApp">Compartir</button>
+                <button className={style.shareButton} onClick={shareWhatsApp} title="Compartir por WhatsApp">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"></path>
+                    </svg>
+                    Compartir
+                </button>
             </div>
 
             <div className={style.topRow}>
@@ -116,46 +59,25 @@ export const Admin = () => {
                 <div className={style.buttonsContainer}>
                     <button className={style.btn} onClick={restart}>Restart</button>
                     <button className={style.btn} onClick={resetAll}>Reset All</button>
-                    <button className={style.btn} onClick={randomNumber}>Random</button>
+                    <button className={style.btn} onClick={drawRandomNumber}>Random</button>
                 </div>
             </div>
-              {listRandomNumber.length > 0 && (
-            <div className={`${style.numbers} ${style.lastNumber}`}>
-                {listRandomNumber[listRandomNumber.length - 1]}
+
+            {lastNumber != null && (
+                <div className={`${style.numbers} ${style.lastNumber}`}>
+                    {lastNumber}
+                </div>
+            )}
+
+            <div className={style.numberList}>
+                {drawnNumbers}
             </div>
-        )}
-        <div className={style.numberList}>
-        {listRandomNumber.map((number) => {
-            return <div className={`${style.numbers} ${style.smallNumber}`} key={number}>{number}</div>
-        })}
-        </div>
+
             <h4>Targetas de los usuarios</h4>
             <div className={style.userList}>
+                {userCards}
+            </div>
 
-            {userList?.map((user, index) => {
-                return <div key={user.name ?? index} className={style.cardContainer}>
-                    <h5>{user.name}</h5>
-                    <table className={style.table} >
-                        <tbody>{
-                            user.card?.map((line, indexColumn) => {
-                                return <tr key={indexColumn}>
-                                    {line.map((element) => {
-                                        return <td key={element.number} className={style.td}>
-                                            <div className={`${style.buttonNumber} ${element.matched ? style.matched : ''}`} >
-                                                {element.number}
-                                            </div>
-                                        </td>
-                                    })}
-                                </tr>
-                            })}
-                        </tbody>
-                    </table>
-                </div>
-            })
-        }
-</div>
-
-
-    </div>
+        </div>
     )
 }

@@ -21,6 +21,19 @@
   border-top: 1px solid #eaeaea;
 }
 
+.footer a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #000000;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
 .brand {
   color: #000;
   font-size: 1.4rem;

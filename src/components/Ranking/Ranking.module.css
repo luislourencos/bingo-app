@@ -9,6 +9,8 @@
     align-items: flex-start;
     gap: 5px;
     background-color: rgba(0, 0, 0, 0.2);
+     height: 200px;
+    overflow: scroll;
 }
 
 .title {
@@ -23,22 +25,7 @@
     font-size: 0.75rem;
 }
 
-.line {
-    color: rgb(253, 9, 9);
-    font-size: 1rem;
-}
-
-.bingo {
-    color: rgb(6, 236, 6);
-    font-size: 1.2rem;
-}
-
 @media (max-width: 700px) {
-    .avatar {
-      width: 30px;
-      height: 30px;
-    } 
-
     .list {
         border-radius: 10px;
         margin: 5px 0;

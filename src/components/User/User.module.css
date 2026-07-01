@@ -39,9 +39,14 @@
   border: 2px solid black;
 }
 
-.buttonNumber:hover {
+.buttonNumber:hover:not(:disabled) {
   font-weight: bold;
   transform: scale(0.9);
+}
+
+.buttonNumber:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 .randomNumber {
@@ -50,8 +55,8 @@
   color: #f11712;
   background-color: #ffe63a;
   border-radius: 50%;
-  width: 90px;
-  height: 90px;
+  width: 80px;
+  height: 80px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -155,8 +160,8 @@ color: black;
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 90px;
-  height: 90px;
+  width: 80px;
+  height: 80px;
   object-fit: cover;
   border-radius: 50%;
   z-index: 2;
@@ -282,10 +287,16 @@ color: black;
   .infoGame {
     padding: 0px 5px;
   }
+  .lives {
+    padding: 0px 5px;
+  }
+  .live{
+
+  }
   .randomNumber {
     font-size: 2rem;
-    width: 90px;
-    height: 90px;
+    width: 80px;
+    height: 80px;
   }
 
   .buttonNumber {
@@ -307,6 +318,128 @@ color: black;
     width: 30px;
     height: 30px;
   }
+}
+
+/* Lives row: aligned to the right; hearts are lost left-to-right. */
+.lives {
+  width: 100%;
+  padding: 0 4px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 4px;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.life {
+  display: inline-block;
+  transition: transform 200ms ease;
+}
+
+/* Empty slot: dimmed so the remaining lives stand out. */
+.lifeGone {
+  opacity: 0.35;
+  filter: grayscale(1);
+}
+
+/* Plays once when a life is lost: the breaking heart shakes, scales up and
+   fades so the player clearly notices the hit. */
+.lifeLosing {
+  animation: lifeLost 900ms ease forwards;
+}
+
+@keyframes lifeLost {
+  0% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  15% {
+    transform: scale(1.6) rotate(-12deg);
+  }
+  30% {
+    transform: scale(1.6) rotate(12deg);
+  }
+  45% {
+    transform: scale(1.6) rotate(-12deg);
+  }
+  60% {
+    transform: scale(1.5) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.5) rotate(0deg);
+    opacity: 0.35;
+  }
+}
+
+/* Eliminated dialog: shown when all lives are lost. */
+.eliminatedOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.eliminatedDialog {
+  background-color: white;
+  color: black;
+  border-radius: 12px;
+  padding: 28px 24px;
+  width: 90%;
+  max-width: 340px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.sadFace {
+  font-size: 4rem;
+  line-height: 1;
+  animation: sadBounce 1.2s ease-in-out infinite;
+}
+
+@keyframes sadBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.eliminatedTitle {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.eliminatedText {
+  margin: 0;
+  color: #555;
+}
+
+.eliminatedButton {
+  margin-top: 6px;
+  padding: 10px 26px;
+  border: 0;
+  border-radius: 8px;
+  background-color: #f11712;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition-duration: 200ms;
+}
+
+.eliminatedButton:hover {
+  transform: scale(0.96);
 }
 
 .numberList {

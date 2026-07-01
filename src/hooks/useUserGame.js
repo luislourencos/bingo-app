@@ -1,6 +1,6 @@
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { BINGO_WIN_MS, FLIP_MS, HIDE_MS, LINE_WIN_MS, URL } from '@/utils/constants';
+import { BINGO_WIN_MS, FLIP_MS, HIDE_MS, LINE_WIN_MS, MAX_LIVES, URL } from '@/utils/constants';
 import { clearRoomState, clearState, loadState, roomKey, saveState } from '@/utils/sessionState';
 import { getSocket } from '@/utils/socket';
 import { useSuperhero } from '@/hooks/SuperheroProvider';
@@ -40,6 +40,13 @@ export function useUserGame({ roomId, name, superHeroImage }) {
   const [flipped, setFlipped] = useState(false);
   const [hidden, setHidden] = useState(false);
 
+  // Lives: marking a number that hasn't been drawn costs one life. Reaching 0
+  // eliminates the player. `losingLifeIndex` is the heart just lost, used to
+  // play the loss animation (cleared when the animation ends).
+  const [lives, setLives] = useState(MAX_LIVES);
+  const [losingLifeIndex, setLosingLifeIndex] = useState(null);
+  const [eliminated, setEliminated] = useState(false);
+
   // Auto-dismissing overlays.
   useTimeout(flipped, FLIP_MS, () => setFlipped(false));
   useTimeout(hidden, HIDE_MS, () => setHidden(false));
@@ -56,7 +63,11 @@ export function useUserGame({ roomId, name, superHeroImage }) {
   useEffect(() => {
     if (!room) return;
     const socket = getSocket();
-    socket.emit('joinRoom', room);
+    // Re-join on every (re)connection: a reconnect creates a fresh socket on
+    // the server with empty socket.data, so we must re-send joinRoom or the
+    // player stops receiving room events (restart/resetAll included) after a drop.
+    const joinRoom = () => socket.emit('joinRoom', room);
+    joinRoom();
 
     const onWinnerFirstLine = (data) => setWinnerFirstLine(data);
     const onPriceCard = (data) => setPriceCard(data);
@@ -72,12 +83,16 @@ export function useUserGame({ roomId, name, superHeroImage }) {
         clearState(roomKey(room, 'user', name, 'sentCat'));
         clearState(roomKey(room, 'user', name, 'sentFlip'));
         clearState(roomKey(room, 'user', name, 'sentHide'));
+        clearState(roomKey(room, 'user', name, 'lives'));
       }
       setWinnerBingo({ bingo: false, name: '', price: 0 });
       setWinnerFirstLine({ line: false, name: '', price: 0 });
       setSentCat(false);
       setSentFlip(false);
       setSentHide(false);
+      setLives(MAX_LIVES);
+      setLosingLifeIndex(null);
+      setEliminated(false);
       getCard();
     };
     const onResetAll = () => {
@@ -92,6 +107,7 @@ export function useUserGame({ roomId, name, superHeroImage }) {
     const onReceiveFlip = () => setFlipped(true);
     const onReceiveHide = () => setHidden(true);
 
+    socket.on('connect', joinRoom);
     socket.on('joinError', onJoinError);
     socket.on('receiveCat', onReceiveCat);
     socket.on('receiveFlip', onReceiveFlip);
@@ -106,6 +122,7 @@ export function useUserGame({ roomId, name, superHeroImage }) {
     socket.on('resetAll', onResetAll);
 
     return () => {
+      socket.off('connect', joinRoom);
       socket.off('winnerFirstLine', onWinnerFirstLine);
       socket.off('priceCard', onPriceCard);
       socket.off('winnerBingo', onWinnerBingo);
@@ -147,6 +164,11 @@ export function useUserGame({ roomId, name, superHeroImage }) {
     if (loadState(roomKey(room, 'user', name, 'sentCat'), false)) setSentCat(true);
     if (loadState(roomKey(room, 'user', name, 'sentFlip'), false)) setSentFlip(true);
     if (loadState(roomKey(room, 'user', name, 'sentHide'), false)) setSentHide(true);
+    const savedLives = loadState(roomKey(room, 'user', name, 'lives'), null);
+    if (savedLives !== null) {
+      setLives(savedLives);
+      if (savedLives === 0) setEliminated(true);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [room, name]);
 
@@ -187,6 +209,14 @@ export function useUserGame({ roomId, name, superHeroImage }) {
     }
   }, [sentHide, room, name]);
 
+  // Persist lives only once one has been lost, so a fresh page load doesn't
+  // clobber a saved value before the restore effect runs.
+  useEffect(() => {
+    if (room && name && lives < MAX_LIVES) {
+      saveState(roomKey(room, 'user', name, 'lives'), lives);
+    }
+  }, [lives, room, name]);
+
   useEffect(() => {
     if (card.length > 0) {
       setISLoading(false);
@@ -201,16 +231,30 @@ export function useUserGame({ roomId, name, superHeroImage }) {
   const winnerBingoRef = useRef(winnerBingo);
   const winnerFirstLineRef = useRef(winnerFirstLine);
   const pricesRef = useRef({ linePrice, bingoPrice });
+  const livesRef = useRef(lives);
   useEffect(() => { cardRef.current = card; }, [card]);
   useEffect(() => { listRandomNumberRef.current = listRandomNumber; }, [listRandomNumber]);
   useEffect(() => { winnerBingoRef.current = winnerBingo; }, [winnerBingo]);
   useEffect(() => { winnerFirstLineRef.current = winnerFirstLine; }, [winnerFirstLine]);
   useEffect(() => { pricesRef.current = { linePrice, bingoPrice }; }, [linePrice, bingoPrice]);
+  useEffect(() => { livesRef.current = lives; }, [lives]);
 
   const selectNumber = useCallback((column, line) => {
     const currentCard = cardRef.current;
+    if (livesRef.current <= 0) return; // already eliminated
+    // Can't mark anything until the draw has started.
+    if (listRandomNumberRef.current.length === 0) return;
     const number = currentCard[column][line].number;
-    if (!listRandomNumberRef.current.includes(number)) return;
+    // Wrong pick: the number hasn't been drawn yet -> lose a life.
+    if (!listRandomNumberRef.current.includes(number)) {
+      const next = livesRef.current - 1;
+      setLives(next);
+      setLosingLifeIndex(next); // heart at this index is the one just lost
+      if (next === 0) setEliminated(true);
+      return;
+    }
+    // Already-marked cell: nothing to do, and it must never cost a life.
+    if (currentCard[column][line].matched) return;
 
     const newCard = currentCard.map((row, c) =>
       c === column
@@ -244,6 +288,9 @@ export function useUserGame({ roomId, name, superHeroImage }) {
 
   const returnMain = () => {
     getSocket().emit('removeUser', { name });
+    // Reset lives so a player who left (or was eliminated) starts fresh with a
+    // full 7 the next time they join a game.
+    if (room && name) clearState(roomKey(room, 'user', name, 'lives'));
     router.push('/');
   };
 
@@ -289,6 +336,11 @@ export function useUserGame({ roomId, name, superHeroImage }) {
     sentCat,
     sentFlip,
     sentHide,
+    // lives
+    lives,
+    losingLifeIndex,
+    setLosingLifeIndex,
+    eliminated,
     // handlers
     selectNumber,
     returnMain,

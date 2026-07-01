@@ -35,7 +35,11 @@ export function useAdminGame() {
   useEffect(() => {
     if (!roomId) return;
     const socket = getSocket();
-    socket.emit('joinRoom', roomId);
+    // Re-join on every (re)connection: a reconnect creates a fresh socket on
+    // the server with empty socket.data, so we must re-send joinRoom or actions
+    // like restart/resetAll silently no-op (server returns when roomId is unset).
+    const joinRoom = () => socket.emit('joinRoom', roomId);
+    joinRoom();
 
     const handleUserList = (data) => setUserList(data);
     const handleWinnerFirstLine = (data) =>
@@ -45,11 +49,13 @@ export function useAdminGame() {
       router.push('/');
     };
 
+    socket.on('connect', joinRoom);
     socket.on('userList', handleUserList);
     socket.on('winnerFirstLine', handleWinnerFirstLine);
     socket.on('joinError', handleJoinError);
 
     return () => {
+      socket.off('connect', joinRoom);
       socket.off('userList', handleUserList);
       socket.off('winnerFirstLine', handleWinnerFirstLine);
       socket.off('joinError', handleJoinError);

@@ -11,6 +11,9 @@ export const MAX_NAME_LENGTH = 10;
 export const ADMIN_NAME = 'admin6232';
 export const ROOM_ID_CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
+// Lives a player starts with; marking a number that hasn't been drawn costs one.
+export const MAX_LIVES = 7;
+
 // Player-progress colour thresholds (percent complete) used in the players list.
 export const PROGRESS_HIGH = 77;
 export const PROGRESS_MID = 50;

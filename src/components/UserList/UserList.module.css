@@ -21,7 +21,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 8px;
+    gap: 5px;
+    color: white;
     font-size: 0.75rem;
 }
 

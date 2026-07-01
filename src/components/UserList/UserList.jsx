@@ -25,10 +25,9 @@ export const UserList = ({ userList, winnerFirstLine, winnerBingo, getSuperHeroB
                     <div className={style.avatar}>
                         <Image src={getSuperHeroById(user.superHeroImage)} width={32} height={32} className={style.avatar} alt="Picture of the author" />
                     </div>
-                    <p>{user.name} - </p>
-                    <p>{`${user.completed}%`}</p>
-                    {winnerFirstLine?.name === user.name && <p className={style.line}>- Linea</p>}
-                    {winnerBingo?.name === user.name && <p className={style.bingo}>- Bingo</p>}
+                    <p>{user.name} </p>
+                    {winnerFirstLine?.name === user.name && <p className={style.line}>Linea</p>}
+                    {winnerBingo?.name === user.name && <p className={style.bingo}>Bingo</p>}
                 </div>
             ))}
         </div>

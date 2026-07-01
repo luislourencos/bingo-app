@@ -57,8 +57,8 @@ export const User = ({ roomId, name, superHeroImage }) => {
           <Image
             src="/pngwing.com.png"
             alt=""
-            width={400}
-            height={400}
+            width={500}
+            height={500}
             className={styles.slidingCat}
             onAnimationEnd={() => setSlideCat(false)}
           />

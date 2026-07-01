@@ -7,7 +7,9 @@ let socket;
 // Reusing one connection avoids opening a new socket per effect/handler.
 export const getSocket = () => {
     if (!socket) {
-        socket = socketIOClient(URL);
+        // WebSocket only: the server accepts no other transport, so don't waste
+        // a failing HTTP long-polling handshake before upgrading.
+        socket = socketIOClient(URL, { transports: ['websocket'] });
     }
     return socket;
 };

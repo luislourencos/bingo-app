@@ -38,7 +38,7 @@ export function useAdminGame() {
     // Re-join on every (re)connection: a reconnect creates a fresh socket on
     // the server with empty socket.data, so we must re-send joinRoom or actions
     // like restart/resetAll silently no-op (server returns when roomId is unset).
-    const joinRoom = () => socket.emit('joinRoom', roomId);
+    const joinRoom = () => socket.emit('joinRoom', roomId, true);
     joinRoom();
 
     const handleUserList = (data) => setUserList(data);
@@ -100,6 +100,9 @@ export function useAdminGame() {
   }, [roomId, cardPrice]);
 
   const resetAll = useCallback(() => {
+    // Full wipe: clear the drawn numbers locally (the admin doesn't listen to
+    // the randomNumbers event, so it won't hear the server's reset otherwise).
+    setListRandomNumber([]);
     if (roomId) clearRoomState(roomId);
     if (typeof window !== 'undefined') localStorage.removeItem('ranking');
     getSocket().emit('resetAll');
